@@ -127,6 +127,7 @@
                                 <RadioButton Tag="Debloat" GroupName="SidebarNav" Style="{StaticResource PremiumSidebarItem}" Content="Debloat" Command="{Binding NavigateCommand}" CommandParameter="Debloat"/>
                                 <RadioButton Tag="BiosSafe" GroupName="SidebarNav" Style="{StaticResource PremiumSidebarItem}" Content="BIOS Safe" Command="{Binding NavigateCommand}" CommandParameter="BiosSafe"/>
                                 <RadioButton Tag="MaxPerformance" GroupName="SidebarNav" Style="{StaticResource PremiumSidebarItem}" Content="Max Performance" Command="{Binding NavigateCommand}" CommandParameter="MaxPerformance"/>
+                                <RadioButton Tag="V4" GroupName="SidebarNav" Style="{StaticResource PremiumSidebarItem}" Content="ERROR OPTIMIZER V4" Command="{Binding NavigateCommand}" CommandParameter="V4"/>
                                 <RadioButton Tag="AiOptimization" GroupName="SidebarNav" Style="{StaticResource PremiumSidebarItem}" Content="AI Optimization" Command="{Binding NavigateCommand}" CommandParameter="AiOptimization"/>
 
                                 <Border Height="1" Background="#0AFFFFFF" Margin="20,10"/>
