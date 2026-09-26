@@ -1,0 +1,387 @@
+{
+  "id": "Debloat",
+  "displayName": "Debloat",
+  "description": "Comprehensive Windows debloater and system customization engine with telemetry removal, app management, and UI tweaks.",
+  "extends": [],
+  "targetProcessReduction": {
+    "min": 5,
+    "max": 20
+  },
+  "entries": [
+    {
+      "id": "debloat.appx.candycrush",
+      "displayName": "Remove Candy Crush & King Games",
+      "category": "Bloatware",
+      "action": "RemoveAppxPackage",
+      "target": "king.com.CandyCrushSaga",
+      "value": "Removed",
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Removes pre-installed King promotional game packages."
+    },
+    {
+      "id": "debloat.appx.tiktok",
+      "displayName": "Remove TikTok App",
+      "category": "Bloatware",
+      "action": "RemoveAppxPackage",
+      "target": "ByteDance.TikTok",
+      "value": "Removed",
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Removes pre-installed social media client."
+    },
+    {
+      "id": "debloat.appx.facebook",
+      "displayName": "Remove Facebook & Messenger Stub",
+      "category": "Bloatware",
+      "action": "RemoveAppxPackage",
+      "target": "Facebook",
+      "value": "Removed",
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Removes pre-installed social media package."
+    },
+    {
+      "id": "debloat.appx.instagram",
+      "displayName": "Remove Instagram Stub",
+      "category": "Bloatware",
+      "action": "RemoveAppxPackage",
+      "target": "Instagram",
+      "value": "Removed",
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Removes pre-installed Instagram application."
+    },
+    {
+      "id": "debloat.appx.clipchamp",
+      "displayName": "Remove Clipchamp Video Editor",
+      "category": "Bloatware",
+      "action": "RemoveAppxPackage",
+      "target": "Clipchamp.Clipchamp",
+      "value": "Removed",
+      "os": [
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Removes Microsoft Clipchamp bundled video editor."
+    },
+    {
+      "id": "debloat.appx.bingnews",
+      "displayName": "Remove Bing News & Weather Feeds",
+      "category": "Bloatware",
+      "action": "RemoveAppxPackage",
+      "target": "Microsoft.BingNews",
+      "value": "Removed",
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Removes MSN / Bing News background feed synchronization."
+    },
+    {
+      "id": "debloat.feature.onedrive.startup",
+      "displayName": "Disable OneDrive Automatic Startup",
+      "category": "Windows Features",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\OneDrive\\DisableFileSyncNGSC",
+      "value": 1,
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "Prevents OneDrive from syncing in the background. Existing local files are preserved.",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Disables background OneDrive synchronization process without touching local user documents."
+    },
+    {
+      "id": "debloat.feature.cortana",
+      "displayName": "Disable Cortana Voice Assistant",
+      "category": "Windows Features",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search\\AllowCortana",
+      "value": 0,
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Disables Cortana background listening and indexing features."
+    },
+    {
+      "id": "debloat.feature.widgets",
+      "displayName": "Disable Windows 11 Widgets & News Taskbar Icon",
+      "category": "Windows Features",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDa",
+      "value": 0,
+      "os": [
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Hides Windows 11 Widgets icon and suspends background news ticker feed processes."
+    },
+    {
+      "id": "debloat.feature.teams",
+      "displayName": "Disable Microsoft Teams / Chat Taskbar Integration",
+      "category": "Windows Features",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarMn",
+      "value": 0,
+      "os": [
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Removes Microsoft Teams Chat icon from Windows taskbar."
+    },
+    {
+      "id": "debloat.privacy.telemetry",
+      "displayName": "Set Windows Diagnostic Data to Security / Minimal",
+      "category": "Privacy",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection\\AllowTelemetry",
+      "value": 0,
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Restricts Windows Diagnostic Data transmission to essential security updates only."
+    },
+    {
+      "id": "debloat.privacy.advertising",
+      "displayName": "Disable Advertising ID for Tailored Experiences",
+      "category": "Privacy",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo\\Enabled",
+      "value": 0,
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Prevents Windows and store applications from tracking cross-app usage."
+    },
+    {
+      "id": "debloat.privacy.activityfeed",
+      "displayName": "Disable Activity History & Timeline Tracking",
+      "category": "Privacy",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System\\EnableActivityFeed",
+      "value": 0,
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Stops Windows from recording and synchronizing user task history to cloud accounts."
+    },
+    {
+      "id": "debloat.privacy.tailored",
+      "displayName": "Disable Tailored Experiences with Diagnostic Data",
+      "category": "Privacy",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Privacy\\TailoredExperiencesWithDiagnosticDataEnabled",
+      "value": 0,
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Disables personalized tips, ads, and Microsoft recommendations based on diagnostic metrics."
+    },
+    {
+      "id": "debloat.registry.suggestions",
+      "displayName": "Disable Start Menu App Recommendations & Ads",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\\SubscribedContent-338388Enabled",
+      "value": 0,
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Disables suggested app promotions inside the Start Menu search."
+    },
+    {
+      "id": "debloat.registry.lockscreen",
+      "displayName": "Disable Lock Screen Fun Facts, Tips and Tricks",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\\RotatingLockScreenOverlayEnabled",
+      "value": 0,
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Removes advertisements and promotional overlays from the Windows Lock Screen."
+    },
+    {
+      "id": "debloat.registry.silentapps",
+      "displayName": "Disable Silent Background Consumer App Installs",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\\SilentInstalledAppsEnabled",
+      "value": 0,
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Prevents Windows Content Delivery Manager from downloading unrequested games in the background."
+    },
+    {
+      "id": "debloat.ui.classiccontext",
+      "displayName": "Restore Windows 10 Classic Context Menu",
+      "category": "Windows UI",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32\\",
+      "value": "",
+      "os": [
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "Restores full right-click context menu without 'Show more options' sub-menu.",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Disables Windows 11 tiered context menu and reveals all shell extensions instantly."
+    },
+    {
+      "id": "debloat.ui.darktheme",
+      "displayName": "Enable Full Windows System Dark Theme",
+      "category": "Windows UI",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize\\AppsUseLightTheme",
+      "value": 0,
+      "os": [
+        "win10",
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Enables sleek dark mode across Windows Explorer, Settings, and universal store applications."
+    },
+    {
+      "id": "debloat.ui.taskbaralign",
+      "displayName": "Align Windows 11 Taskbar to Left",
+      "category": "Windows UI",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarAl",
+      "value": 0,
+      "os": [
+        "win11"
+      ],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Moves the Start button and running applications to the classic left position."
+    }
+  ]
+}

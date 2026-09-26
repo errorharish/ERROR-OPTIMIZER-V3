@@ -1,0 +1,26 @@
+{
+  "id": "AfterEffectsTurbo",
+  "displayName": "After Effects Turbo",
+  "description": "Maximum rendering and processing performance for Adobe After Effects.",
+  "targetProcessReduction": { "min": 20, "max": 40 },
+  "extends": [ "Ultimate" ],
+  "entries": [
+    {
+      "id": "ae_priority",
+      "displayName": "Set After Effects Priority to High",
+      "category": "Workload",
+      "action": "SetProcessPriority",
+      "target": "AfterFX",
+      "value": "High",
+      "risk": "Medium"
+    },
+    {
+      "id": "ae_power",
+      "displayName": "Set Ultimate Performance Power Plan",
+      "category": "Performance",
+      "action": "SetPowerPlan",
+      "target": "e9a42b02-d5df-448d-aa00-03f14749eb61",
+      "risk": "Medium"
+    }
+  ]
+}

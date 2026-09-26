@@ -1,0 +1,103 @@
+<UserControl x:Class="BiosOptimizer.GUI.Views.RegistryValuesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:controls="clr-namespace:BiosOptimizer.GUI.Controls"
+             xmlns:vm="clr-namespace:BiosOptimizer.GUI.ViewModels"
+             xmlns:views="clr-namespace:BiosOptimizer.GUI.Views"
+             xmlns:conv="clr-namespace:BiosOptimizer.GUI.Converters"
+             Background="Transparent"
+             UseLayoutRounding="True" SnapsToDevicePixels="True"
+             TextOptions.TextFormattingMode="Display"
+             TextOptions.TextRenderingMode="ClearType">
+
+    <UserControl.Resources>
+        <!-- DataTemplates for True Sub-Page Switching (Identical to AI Optimization pattern) -->
+        <DataTemplate DataType="{x:Type vm:RegistryValuesRamViewModel}">
+            <views:RegistryValuesRamView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:GpuRegistryValuesViewModel}">
+            <views:GpuRegistryValuesView/>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/><!-- 0: Top Header Banner & Sub-Navigation -->
+            <RowDefinition Height="*"/><!-- 1: Dedicated Sub-Page Content Area -->
+        </Grid.RowDefinitions>
+
+        <!-- ============================================================
+             ROW 0: PROFILE HEADER BANNER & SUB-PAGE SWITCHER (MATCHES AI OPTIMIZATION)
+             ============================================================ -->
+        <Border Grid.Row="0" Style="{StaticResource GlassCardStyle}" Padding="18,14" Margin="24,18,24,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Icon Box -->
+                <Border Grid.Column="0" Width="44" Height="44" CornerRadius="8"
+                        Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBorderSubtleBrush}" BorderThickness="1"
+                        Margin="0,0,14,0" VerticalAlignment="Center">
+                    <TextBlock Text="&#xE8B9;" FontFamily="Segoe MDL2 Assets" FontSize="20"
+                               Foreground="{DynamicResource AccentBrush}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- Title & Subtitle -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                        <TextBlock Text="REGISTRY VALUES" FontSize="18" FontWeight="Bold"
+                                   Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,10,0"/>
+                        <Border CornerRadius="4" Padding="8,2" Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBrush}" BorderThickness="1" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding ActiveSubTab, StringFormat='{}{0} CONFIGURATION'}" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                        </Border>
+                    </StackPanel>
+                    <TextBlock Text="Hardware-aware Windows registry value configuration, live readback and verification." FontSize="11"
+                               Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- TOP MODULE SWITCHER: [ RAM ] [ GPU ] -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="RAM"
+                            Command="{Binding SelectRamTabCommand}" Margin="0,0,6,0" Padding="18,6">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsRamTabActive}" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                        <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button Content="GPU"
+                            Command="{Binding SelectGpuTabCommand}" Padding="18,6">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsGpuTabActive}" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                        <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ============================================================
+             ROW 1: DEDICATED SUB-PAGE RENDER CONTAINER (ONLY SELECTED CHILD IS RENDERED)
+             ============================================================ -->
+        <ContentControl Grid.Row="1" Content="{Binding CurrentSubView}"/>
+    </Grid>
+</UserControl>

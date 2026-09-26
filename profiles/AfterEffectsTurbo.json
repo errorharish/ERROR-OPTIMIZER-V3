@@ -1,0 +1,108 @@
+{
+  "id": "AfterEffectsTurbo",
+  "displayName": "After Effects Turbo",
+  "description": "Workload-specific optimization for Adobe After Effects. Reduces background CPU/RAM competition, optimizes GPU access, and prioritizes render processes. Only applies After Effects-relevant targets.",
+  "extends": ["Pro"],
+  "targetProcessReduction": {
+    "min": 50,
+    "max": 90
+  },
+  "entries": [
+    {
+      "id": "ae.powerplan",
+      "displayName": "Ultimate Performance Power Plan (AC)",
+      "category": "Performance",
+      "action": "SetPowerPlan",
+      "target": "e9a42b02-d5df-448d-aa00-03f14749eb61",
+      "value": "e9a42b02-d5df-448d-aa00-03f14749eb61",
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [
+        { "type": "IsOnAc", "operator": "Equals", "value": true }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "ae.foreground",
+      "displayName": "Foreground Application CPU Priority",
+      "category": "Performance",
+      "action": "SetForegroundPriority",
+      "target": "Win32PrioritySeparation",
+      "value": 38,
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "ae.hags",
+      "displayName": "Hardware Accelerated GPU Scheduling",
+      "category": "Performance",
+      "action": "SetHags",
+      "target": "HwSchMode",
+      "value": 2,
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "Requires DirectX 12 capable GPU.",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "ae.process.priority",
+      "displayName": "After Effects Process Priority Boost",
+      "category": "Workload",
+      "action": "SetProcessPriority",
+      "target": "AfterFX",
+      "value": "AboveNormal",
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "Only applies when After Effects is running.",
+      "conditions": [
+        { "type": "WorkloadInstalled", "operator": "Equals", "value": "AdobeAfterEffects" }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "ae.sysmain.ssd",
+      "displayName": "Disable SysMain on SSD",
+      "category": "Service",
+      "action": "SetServiceStartup",
+      "target": "SysMain",
+      "value": "Disabled",
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [
+        { "type": "StorageIsSsd", "operator": "Equals", "value": true }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "ae.pagefile",
+      "displayName": "System-Managed Pagefile for AE",
+      "category": "Memory",
+      "action": "SetPagefile",
+      "target": "Auto",
+      "value": "Auto",
+      "os": ["win10", "win11"],
+      "risk": "High",
+      "requiresConfirmation": true,
+      "warning": "After Effects may allocate large scratch disk. Ensure adequate disk space.",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    }
+  ]
+}

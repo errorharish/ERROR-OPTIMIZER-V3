@@ -1,0 +1,16 @@
+﻿{
+  "id": "RamTest",
+  "displayName": "RAM Test Tier",
+  "description": "Tests RAM aware svchost split threshold.",
+  "targetProcessReduction": { "min": 0, "max": 0 },
+  "entries": [
+    {
+      "id": "RamAwareSvchost",
+      "displayName": "Svchost Split Threshold",
+      "category": "System",
+      "action": "SetSvchostSplitThreshold",
+      "target": "Global",
+      "risk": "Medium"
+    }
+  ]
+}

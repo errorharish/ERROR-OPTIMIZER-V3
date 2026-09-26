@@ -1,0 +1,1829 @@
+<UserControl x:Class="BiosOptimizer.GUI.Views.AiOptimizationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:controls="clr-namespace:BiosOptimizer.GUI.Controls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:BiosOptimizer.GUI.ViewModels"
+             xmlns:conv="clr-namespace:BiosOptimizer.GUI.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="2400" d:DesignWidth="1000"
+             d:DataContext="{d:DesignInstance Type=vm:AiOptimizationViewModel}">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <conv:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVis"/>
+
+
+
+        <Style x:Key="PillFilterButton" TargetType="Button">
+            <Setter Property="Background" Value="#11FFFFFF"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#1AFFFFFF"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#22FFFFFF"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModeSelectButton" TargetType="Button">
+            <Setter Property="Background" Value="#08FFFFFF"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#14FFFFFF"/>
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#14FFFFFF"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                  Focusable="False" Margin="0,0,0,10" Style="{StaticResource SlimScrollViewer}">
+        <StackPanel Margin="24,18,24,30">
+
+            <!-- ======================================================== -->
+            <!-- ROW 0: PROFILE HEADER BANNER & MODULE SWITCHER           -->
+            <!-- ======================================================== -->
+            <Border Style="{StaticResource GlassCardStyle}" Padding="18,14" Margin="0,0,0,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Width="44" Height="44" CornerRadius="8"
+                            Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBorderSubtleBrush}" BorderThickness="1"
+                            Margin="0,0,14,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding ProfileIcon}" FontFamily="Segoe MDL2 Assets" FontSize="20"
+                                   Foreground="{DynamicResource AccentBrush}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                            <TextBlock Text="{Binding TierName}" Style="{StaticResource PageTitleStyle}" FontSize="18"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding Description}" FontSize="11"
+                                   Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <!-- TOP MODULE SWITCHER: [ RAM LIMITER ] [ WORKLOAD OPTIMIZATION ] [ POWER PLAN OPTIMIZATION ] -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="RAM LIMITER"
+                                Command="{Binding SelectRamLimiterTabCommand}" Margin="0,0,6,0" Padding="14,6">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsRamLimiterTab}" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <Button Content="WORKLOAD OPTIMIZATION"
+                                Command="{Binding SelectWorkloadTabCommand}" Margin="0,0,6,0" Padding="14,6">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsWorkloadTab}" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <Button Content="POWER PLAN OPTIMIZATION"
+                                Command="{Binding SelectPowerPlanTabCommand}" Padding="14,6">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsPowerPlanTab}" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ======================================================== -->
+            <!-- ROW 0.5: TOP PRIMARY MODE CONTROLLER (RAM & WORKLOAD ONLY)-->
+            <!-- ======================================================== -->
+            <Border Style="{StaticResource GlassCardStyle}" Padding="16,12" Margin="0,0,0,10"
+                    Visibility="{Binding IsPowerPlanTab, Converter={StaticResource InverseBoolToVis}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBorderSubtleBrush}" BorderThickness="1" CornerRadius="4" Padding="12,6" Margin="0,0,14,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding CurrentActiveModuleModeText}" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,12,0">
+                        <TextBlock Text="{Binding CurrentActiveModuleDescription}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <!-- Mode Selectors: [REFRESH] [NORMAL] [CUSTOM] and [SWITCH BUTTON] -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="REFRESH"
+                                Command="{Binding RefreshCommand}" Margin="0,0,6,0" Padding="14,6"
+                                Style="{StaticResource PillFilterButton}" Foreground="{StaticResource TextPrimaryBrush}" BorderBrush="{DynamicResource AccentBrush}"/>
+
+                        <Button Content="NORMAL"
+                                Command="{Binding SetActiveModuleNormalCommand}" Margin="0,0,6,0" Padding="14,6">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding CurrentActiveModuleIsNormal}" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <Button Content="CUSTOM"
+                                Command="{Binding SetActiveModuleCustomCommand}" Margin="0,0,8,0" Padding="14,6">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding CurrentActiveModuleIsCustom}" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <Button Content="{Binding CurrentActiveModuleModeToggleText}" Style="{StaticResource PillFilterButton}"
+                                Command="{Binding ToggleActiveModuleModeCommand}" Padding="14,6"
+                                Foreground="{StaticResource TextPrimaryBrush}" BorderBrush="{DynamicResource AccentBrush}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ======================================================== -->
+            <!-- ROW 1: DYNAMIC PRO TIP BANNER                            -->
+            <!-- ======================================================== -->
+            <Border Background="#08FFFFFF" BorderBrush="#14FFFFFF" BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,0,0,12">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBorderSubtleBrush}" BorderThickness="1" CornerRadius="3" Padding="6,2" Margin="0,0,10,0" VerticalAlignment="Center">
+                        <TextBlock Text="PRO TIP" FontSize="8" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                    </Border>
+                    <TextBlock Text="{Binding ProTipText}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ======================================================== -->
+            <!-- DEDICATED 3-CARD AI SUMMARY & RISK AREA                  -->
+            <!-- ======================================================== -->
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.1*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="1.35*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="0.95*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- CARD 1: SYSTEM & AI PROFILE -->
+                <Border Grid.Column="0" Style="{StaticResource GlassCardStyle}" Padding="16,14" MinHeight="148">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,0,0,8">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" FontSize="11.5"
+                                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="AI PROFILE ENGINE" FontSize="10.5" FontWeight="Bold"
+                                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Border HorizontalAlignment="Right" CornerRadius="4" Padding="6,2" Background="#1410B981">
+                                <TextBlock Text="AI READY" FontSize="8" FontWeight="Bold" Foreground="#10B981"/>
+                            </Border>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,4,4">
+                                <TextBlock Text="ACTIVE MODULE" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Text="{Binding CurrentActiveModuleModeText}" FontSize="9.5" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" Margin="0,1,0,0"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="0" Grid.Column="1" Margin="4,0,0,4">
+                                <TextBlock Text="PROTECTION" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Text="{Binding ForegroundProtectionText}" FontSize="9.5" FontWeight="SemiBold" Foreground="#10B981" TextTrimming="CharacterEllipsis" Margin="0,1,0,0"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,4,4,0">
+                                <TextBlock Text="SYSTEM RAM" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Text="{Binding SystemRamStatus}" FontSize="9.5" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" Margin="0,1,0,0"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="1" Grid.Column="1" Margin="4,4,0,0">
+                                <TextBlock Text="RAM PRESSURE" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Text="{Binding MemoryPressureText}" FontSize="9.5" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" Margin="0,1,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- CARD 2: OPTIMIZATION STATUS -->
+                <Border Grid.Column="2" Style="{StaticResource GlassCardStyle}" Padding="16,14" MinHeight="148">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,0,0,8">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE945;" FontFamily="Segoe MDL2 Assets" FontSize="11.5"
+                                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="OPTIMIZATION STATUS" FontSize="10.5" FontWeight="Bold"
+                                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding ActiveModeDisplay}" FontSize="8.5" FontWeight="Bold"
+                                       Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <Grid Grid.Row="1" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="AUTO ACTIONS" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Text="{Binding AutoActionCount}" FontSize="15" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="HIGH RAM APPS" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Text="{Binding HighRamAppsCount}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="CUSTOM TARGETS" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Text="{Binding ActiveCustomTargetsCount}" FontSize="15" FontWeight="Bold" Foreground="#10B981" Margin="0,2,0,0"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="3">
+                                <TextBlock Text="RAM USAGE" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Text="{Binding SystemRamPercentDisplay}" FontSize="15" FontWeight="Bold" Foreground="#F59E0B" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- CARD 3: RISK & SAFETY (Dedicated 3rd Summary Card - Fixed Semantic Colors) -->
+                <Border Grid.Column="4" Style="{StaticResource GlassCardStyle}" Padding="16,14" MinHeight="148">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,0,0,6">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="11.5"
+                                           Foreground="{Binding RiskSemanticBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="RISK &amp; SAFETY" FontSize="10.5" FontWeight="Bold"
+                                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Risk Classification Badge -->
+                        <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,0,0,6">
+                            <Border HorizontalAlignment="Left" CornerRadius="5" Padding="10,4"
+                                    Background="{Binding RiskSemanticSoftBg}"
+                                    BorderBrush="{Binding RiskSemanticBorderBrush}"
+                                    BorderThickness="1.2">
+                                    <Border.Effect>
+                                        <DropShadowEffect Color="{Binding RiskGlowColor}" BlurRadius="10" ShadowDepth="0" Opacity="0.45"/>
+                                    </Border.Effect>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding RiskIcon}" FontFamily="Segoe MDL2 Assets" FontSize="11"
+                                               Foreground="{Binding RiskSemanticBrush}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding RiskClassificationText}" FontSize="10.5" FontWeight="Bold"
+                                               Foreground="{Binding RiskSemanticBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="{Binding RiskDescription}" FontSize="9"
+                                       Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="0,5,0,0" LineHeight="12"/>
+                        </StackPanel>
+
+                        <!-- Breakdown Pills (Fixed Semantic Colors) -->
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- SAFE PILL -->
+                            <Border Grid.Column="0" Background="#1410B981" BorderBrush="#3310B981" BorderThickness="1" CornerRadius="4" Padding="4,2" Margin="0,0,3,0">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="SAFE" FontSize="7" FontWeight="Bold" Foreground="#10B981" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding SafeActionCount}" FontSize="11" FontWeight="Bold" Foreground="#10B981" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- MEDIUM PILL -->
+                            <Border Grid.Column="1" Background="#14F59E0B" BorderBrush="#33F59E0B" BorderThickness="1" CornerRadius="4" Padding="4,2" Margin="0,0,3,0">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="MEDIUM" FontSize="7" FontWeight="Bold" Foreground="#F59E0B" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding MediumRiskActionCount}" FontSize="11" FontWeight="Bold" Foreground="#F59E0B" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- HIGH PILL -->
+                            <Border Grid.Column="2" Background="#14EF4444" BorderBrush="#33EF4444" BorderThickness="1" CornerRadius="4" Padding="4,2">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="HIGH" FontSize="7" FontWeight="Bold" Foreground="#EF4444" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding HighRiskActionCount}" FontSize="11" FontWeight="Bold" Foreground="#EF4444" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- ==================================================================================== -->
+            <!-- ==================================================================================== -->
+            <!-- ══════════════════════════════ MODULE 1: RAM LIMITER ═══════════════════════════════ -->
+            <!-- ==================================================================================== -->
+            <StackPanel Visibility="{Binding IsRamLimiterTab, Converter={StaticResource BoolToVis}}">
+
+                <!-- 1. TOP STATUS AREA -->
+                <Border Style="{StaticResource GlassCardStyle}" Padding="20,16" Margin="0,0,0,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="ENGINE" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="{Binding MasterSwitchText}" FontSize="12" FontWeight="Bold" Foreground="{Binding MasterSwitchBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="ACTIVE MODE" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="{Binding ActiveViewModeName}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="STRATEGY" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="{Binding ActiveModeHeader}" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="3">
+                            <TextBlock Text="STARTUP" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="{Binding RamStartupText}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="STATUS" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="{Binding RamEngineRunningText}" FontSize="9" FontWeight="Bold" Foreground="{Binding MasterSwitchBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        
+                        <Button Grid.Column="5" Command="{Binding ToggleMasterSwitchCommand}"
+                                Height="36" Padding="20,0" Style="{StaticResource PrimaryOptimizationButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="RAM CONTROL: " FontSize="10" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding MasterSwitchText}" FontSize="10" FontWeight="Bold" VerticalAlignment="Center" Foreground="White"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <!-- RAM LIMITER TELEMETRY CARD -->
+                <Border Style="{StaticResource GlassCardStyle}" Padding="16,12" Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                            <TextBlock Text="SYSTEM RAM" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding SystemRamStatus}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                            <TextBlock Text="MEMORY PRESSURE" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding MemoryPressureText}" FontSize="12" FontWeight="Bold" Foreground="{Binding MemoryPressureBrush}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+                            <TextBlock Text="HIGH-RAM APPS" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding HighRamAppsCount}" FontSize="12" FontWeight="Bold" Foreground="#EF4444" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="3" HorizontalAlignment="Center">
+                            <TextBlock Text="AUTO ACTIONS" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding AutoActionCount}" FontSize="12" FontWeight="Bold" Foreground="#10B981" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- 2. PROFILE / TARGET CONFIGURATION (SUB-NAV) -->
+                <TextBlock Text="PROFILE / TARGET CONFIGURATION" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="0,4,0,8"/>
+                <Border Background="#06FFFFFF" BorderBrush="#0DFFFFFF" BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,0,0,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="CONFIGURING: " FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding ActiveViewModeName}" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" Text="Control mode is active from the top mode selector" FontSize="8" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- NORMAL CONFIGURATION PANEL -->
+                <StackPanel Visibility="{Binding IsNormalView, Converter={StaticResource BoolToVis}}">
+                    <Border Margin="0,0,0,14" Padding="16,14" Background="#06FFFFFF" BorderBrush="#0DFFFFFF" BorderThickness="1" CornerRadius="6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="ACTIVE MODE:" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                
+                                <Button Content="AUTO" Command="{Binding SetAutoModeCommand}" Margin="0,0,6,0" Padding="14,6">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource ModeSelectButton}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsAutoMode}" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+                                <Button Content="LIGHT" Command="{Binding SetLightModeCommand}" Margin="0,0,6,0" Padding="14,6">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource ModeSelectButton}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsLightMode}" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+                                <Button Content="AGGRESSIVE" Command="{Binding SetAggressiveModeCommand}" Padding="14,6">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource ModeSelectButton}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsAggressiveMode}" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="FOREGROUND PROTECTION:" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <Button Content="{Binding ForegroundProtectionText}" Style="{StaticResource PillFilterButton}" Command="{Binding ToggleForegroundProtectionCommand}" Padding="10,4" ToolTip="Protects the application you are actively using from aggressive background memory-control actions. Background processes are prioritized for memory control first."/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <!-- CUSTOM CONFIGURATION PANEL -->
+                <StackPanel Visibility="{Binding IsCustomView, Converter={StaticResource BoolToVis}}">
+                    <!-- SEARCH & SELECT APP TO ENFORCE LIMIT -->
+                    <Border Style="{StaticResource GlassCardStyle}" Padding="16,14" Margin="0,0,0,12">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="SEARCH &amp; SELECT APPLICATION TO ADD CUSTOM RAM LIMIT" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Content="+ ADD CUSTOM APP" Command="{Binding BrowseCustomRamAppCommand}" Style="{StaticResource PillFilterButton}" Padding="12,4" Foreground="{DynamicResource AccentBrush}" BorderBrush="{DynamicResource AccentBrush}"/>
+                            </Grid>
+                            <Border Background="#11000000" BorderBrush="#22FFFFFF" BorderThickness="1" CornerRadius="4" Padding="8,6" Margin="0,0,0,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <TextBox Grid.Column="1" Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0" Foreground="White" FontSize="11" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                            <ItemsControl ItemsSource="{Binding SearchResults}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#06FFFFFF" BorderBrush="{Binding SelectionBorderBrush}" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="0,0,0,4">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200"/>
+                                                    <ColumnDefinition Width="120"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding DisplayName}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding ExecutableName}" FontSize="9" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding CurrentRamDisplay}" FontSize="9" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center"/>
+                                                <Button Grid.Column="3" Content="{Binding SelectButtonText}" Foreground="{Binding SelectButtonBrush}" BorderBrush="{Binding SelectButtonBrush}" Background="#11FFFFFF" BorderThickness="1"
+                                                        Command="{Binding DataContext.SelectSearchAppCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}" Padding="12,4" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="9"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- SELECTED APP RAM LIMIT CONFIGURE CARD -->
+                    <Border Style="{StaticResource GlassCardStyle}" Padding="18,14" Margin="0,0,0,14" Visibility="{Binding HasSelectedApp, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="SELECTED TARGET CONFIGURATION" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,10"/>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="220"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="TARGET APPLICATION" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <TextBlock Text="{Binding SelectedAppName}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,2,0,0"/>
+                                    <TextBlock Text="{Binding SelectedAppExe}" FontSize="9" Foreground="{StaticResource TextMutedBrush}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="14,0">
+                                    <Grid Margin="0,0,0,4">
+                                        <TextBlock Text="MAX RAM LIMIT" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Left"/>
+                                        <TextBlock Text="{Binding CustomRamLimitMb, StringFormat='{}{0:F0} MB'}" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                    <Slider Minimum="200" Maximum="16384" Value="{Binding CustomRamLimitMb}" SmallChange="100" LargeChange="500"/>
+                                </StackPanel>
+                                <Button Grid.Column="2" Content="ENFORCE TARGET" Style="{StaticResource PrimaryOptimizationButton}"
+                                        Command="{Binding EnableCustomTargetCommand}" Height="34" Padding="16,0" VerticalAlignment="Center"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 4. CONFIGURED CUSTOM RAM TARGETS -->
+                    <TextBlock Text="CONFIGURED CUSTOM TARGETS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="0,4,0,8"/>
+                    <ItemsControl ItemsSource="{Binding CustomTargets}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource GlassCardStyle}" Padding="16,12" Margin="0,0,0,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Width="32" Height="32" CornerRadius="6" Background="#11FFFFFF" Margin="0,0,12,0" VerticalAlignment="Center">
+                                            <TextBlock Text="&#xE7F4;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding DisplayName}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                            <TextBlock Text="{Binding ExecutableName}" FontSize="9" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                            <TextBlock Text="HARD LIMIT" FontSize="7" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                            <TextBlock Text="{Binding RamLimitDisplay}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                        </StackPanel>
+                                        <Border Grid.Column="3" CornerRadius="3" Padding="6,2" Background="#1410B981" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                            <TextBlock Text="{Binding StatusText}" FontSize="8" FontWeight="Bold" Foreground="{Binding StatusBrush}"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Button Style="{StaticResource PillFilterButton}"
+                                                    Command="{Binding DataContext.ToggleCustomTargetCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" Padding="10,4" Margin="0,0,6,0">
+                                                <TextBlock Text="ENABLE/DISABLE" FontSize="8" FontWeight="SemiBold"/>
+                                            </Button>
+                                            <Button Content="REMOVE" Style="{StaticResource PillFilterButton}"
+                                                    Command="{Binding DataContext.RemoveCustomTargetCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" Padding="10,4" Foreground="#EF4444"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!-- 3. LIVE TARGET PROCESSES / CURRENTLY RUNNING WORKLOADS -->
+                <TextBlock Text="CURRENTLY RUNNING WORKLOADS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="0,10,0,8"/>
+                <ItemsControl ItemsSource="{Binding AutoDetectedGroups}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource GlassCardStyle}" Padding="16,12" Margin="0,0,0,8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="16"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="32" Height="32" CornerRadius="6" Background="#11FFFFFF" Margin="0,0,12,0" VerticalAlignment="Center">
+                                        <TextBlock Text="&#xE7F4;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding ApplicationName}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                        <TextBlock Text="{Binding ProcessCount, StringFormat='{}{0} active processes'}" FontSize="9" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                    <Border Grid.Column="2" CornerRadius="4" Padding="8,3" Background="#14FFFFFF" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding StatusText}" FontSize="8" FontWeight="Bold" Foreground="{Binding StatusBrush}"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding RamDisplay}" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="{Binding RecommendedLimitDisplay, StringFormat='Budget: {0}'}" FontSize="9" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Right"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Border Visibility="{Binding AutoDetectedGroups.Count, Converter={StaticResource InverseBoolToVis}, FallbackValue=Collapsed}" Padding="20" Background="#06FFFFFF" CornerRadius="8" Margin="0,0,0,16">
+                    <TextBlock Text="No high-RAM applications currently running." Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" FontSize="10"/>
+                </Border>
+                <Border Height="8" />
+            </StackPanel>
+
+            <!-- ==================================================================================== -->
+            <!-- ════════════════════════ MODULE 2: WORKLOAD OPTIMIZATION ════════════════════════════ -->
+            <!-- ==================================================================================== -->
+            <StackPanel Visibility="{Binding IsWorkloadTab, Converter={StaticResource BoolToVis}}">
+
+                <!-- 1. TOP STATUS AREA -->
+                <Border Style="{StaticResource GlassCardStyle}" Padding="20,16" Margin="0,0,0,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="ENGINE" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="{Binding WorkloadMasterSwitchText}" FontSize="12" FontWeight="Bold" Foreground="{Binding WorkloadMasterSwitchBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="ACTIVE MODE" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="{Binding ActiveWorkloadViewModeName}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="STRATEGY / AUTO APPLY" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="{Binding ActiveWorkloadModeHeader}" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="3">
+                            <TextBlock Text="STARTUP" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="{Binding WorkloadStartupText}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="STATUS" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="{Binding WorkloadEngineRunningText}" FontSize="9" FontWeight="Bold" Foreground="{Binding WorkloadMasterSwitchBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        
+                        <Button Grid.Column="5" Command="{Binding ToggleWorkloadMasterSwitchCommand}"
+                                Height="36" Padding="20,0" Style="{StaticResource PrimaryOptimizationButton}">
+                            <TextBlock Text="{Binding AutoOptimizationToggleText}" FontSize="10" FontWeight="Bold" Foreground="White"/>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <!-- 2. CURRENTLY RUNNING WORKLOADS (MULTI-SESSION SHARED) -->
+                <Grid Margin="0,4,0,8">
+                    <TextBlock Text="CURRENTLY RUNNING WORKLOADS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding ActiveWorkloadCountHeader}" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                </Grid>
+
+                <!-- Idle State View when NO workloads running -->
+                <Border Style="{StaticResource GlassCardStyle}" Padding="18,14" Margin="0,0,0,14"
+                        Visibility="{Binding HasActiveWorkloads, Converter={StaticResource InverseBoolToVis}}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="8" Background="#0AFFFFFF" Margin="0,0,14,0" VerticalAlignment="Center">
+                            <TextBlock Text="&#xE7FC;" FontFamily="Segoe MDL2 Assets" FontSize="18" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="NO SUPPORTED WORKLOAD RUNNING" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="Launch any supported game, emulator, creative tool, or video AI workload for automated acceleration." FontSize="9" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Multi-Workload List when 1 or more workloads running -->
+                <ItemsControl ItemsSource="{Binding ActiveWorkloadSessions}"
+                              Visibility="{Binding HasActiveWorkloads, Converter={StaticResource BoolToVis}}"
+                              Margin="0,0,0,14">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource GlassCardStyle}" Padding="18,14" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Grid.Column="0" Width="44" Height="44" CornerRadius="8" Background="{DynamicResource AccentSoftBrush}" Margin="0,0,14,0" VerticalAlignment="Center">
+                                            <TextBlock Text="&#xE7FC;" FontFamily="Segoe MDL2 Assets" FontSize="20" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding DisplayName}" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                                <TextBlock Text="{Binding VersionDisplay}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Bottom" Margin="8,0,0,1"/>
+                                                <Border Margin="8,0,0,0" Padding="6,2" CornerRadius="3" Background="{DynamicResource AccentSoftBrush}" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding TypeDisplay}" FontSize="8" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                                </Border>
+                                                <Border Margin="6,0,0,0" Padding="6,2" CornerRadius="3" Background="#1410B981" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding OptimizationStatusText}" FontSize="8" FontWeight="Bold" Foreground="{Binding OptimizationStatusBrush}"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                <TextBlock Text="{Binding ForegroundDisplay, StringFormat='● RUNNING • {0}  |  '}" FontSize="9" FontWeight="Bold" Foreground="#10B981"/>
+                                                <TextBlock Text="{Binding ProcessCountDisplay, StringFormat='{}{0}  |  '}" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                <TextBlock Text="{Binding RamUsageDisplay, StringFormat='RAM: {0}  |  '}" FontSize="9" Foreground="{StaticResource TextMutedBrush}"/>
+                                                <TextBlock Text="{Binding ActiveProfileSummary, StringFormat='Profile: {0}'}" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                            <TextBlock Text="{Binding RamUsageDisplay}" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" HorizontalAlignment="Right"/>
+                                            <TextBlock Text="TARGET RAM USAGE" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Right"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Live Performance Boost Details Explanation -->
+                                    <Border Background="#06FFFFFF" BorderBrush="#0DFFFFFF" BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,12,0,0">
+                                        <StackPanel>
+                                            <Grid Margin="0,0,0,6">
+                                                <TextBlock Text="PERFORMANCE BOOST ACTIVE — ENFORCED SYSTEM LAYERS" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Left"/>
+                                                <TextBlock Text="{Binding VerifiedSummaryText}" FontSize="8" FontWeight="Bold" Foreground="#10B981" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                            <ItemsControl ItemsSource="{Binding ActionPlan}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid Margin="0,2">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="160"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Grid.Column="0" Text="{Binding Layer}" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                                            <TextBlock Grid.Column="1" Text="{Binding Description}" FontSize="9" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                                <TextBlock Text="{Binding CurrentState}" FontSize="9" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,6,0"/>
+                                                                <controls:NavigationIcon Icon="AiOptimization" IsActive="True" Size="24" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                                <TextBlock Text="{Binding TargetState}" FontSize="9" FontWeight="Bold" Foreground="#10B981"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- 3. PROFILE / TARGET CONFIGURATION (SUB-NAV) -->
+                <TextBlock Text="PROFILE / TARGET CONFIGURATION" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="0,4,0,8"/>
+                <Border Background="#06FFFFFF" BorderBrush="#0DFFFFFF" BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,0,0,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="CONFIGURING: " FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding ActiveWorkloadViewModeName}" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" Text="Control mode is active from the top mode selector" FontSize="8" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- NORMAL CONFIGURATION PANEL -->
+                <StackPanel Visibility="{Binding IsWorkloadNormalView, Converter={StaticResource BoolToVis}}">
+                    <Border Margin="0,0,0,14" Padding="16,14" Background="#06FFFFFF" BorderBrush="#0DFFFFFF" BorderThickness="1" CornerRadius="6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="ACTIVE MODE:" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                
+                                <Button Content="AUTO" Command="{Binding SetWorkloadAutoModeCommand}" Margin="0,0,6,0" Padding="14,6">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource ModeSelectButton}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsWorkloadAutoMode}" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+                                <Button Content="LIGHT" Command="{Binding SetWorkloadLightModeCommand}" Margin="0,0,6,0" Padding="14,6">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource ModeSelectButton}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsWorkloadLightMode}" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+                                <Button Content="AGGRESSIVE" Command="{Binding SetWorkloadAggressiveModeCommand}" Padding="14,6">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource ModeSelectButton}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsWorkloadAggressiveMode}" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="ACTIVE PROFILE: " FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding WorkloadProfileSummary}" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- 4. INSTALLED WORKLOADS (NORMAL VIEW) -->
+                    <TextBlock Text="INSTALLED WORKLOAD INVENTORY" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="0,4,0,8"/>
+                    
+                    <Border Style="{StaticResource GlassCardStyle}" Padding="0" Margin="0,0,0,12">
+                        <StackPanel>
+                            <!-- Filter Bar -->
+                            <Border Background="#06FFFFFF" BorderBrush="#0DFFFFFF" BorderThickness="0,0,0,1" Padding="12,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                        <Button Content="ALL" Command="{Binding SetCategoryAllCommand}" Margin="0,0,6,0" Padding="12,4">
+                                            <Button.Style>
+                                                <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsCategoryAll}" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                                            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                        <Button Content="GAMES" Command="{Binding SetCategoryGamesCommand}" Margin="0,0,6,0" Padding="12,4">
+                                            <Button.Style>
+                                                <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsCategoryGames}" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                                            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                        <Button Content="CREATIVE" Command="{Binding SetCategoryCreativeCommand}" Margin="0,0,6,0" Padding="12,4">
+                                            <Button.Style>
+                                                <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsCategoryCreative}" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                                            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                        <Button Content="VIDEO AI" Command="{Binding SetCategoryVideoAiCommand}" Margin="0,0,6,0" Padding="12,4">
+                                            <Button.Style>
+                                                <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsCategoryVideoAi}" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                                            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                        <Button Content="EMULATORS" Command="{Binding SetCategoryEmulatorsCommand}" Margin="0,0,6,0" Padding="12,4">
+                                            <Button.Style>
+                                                <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsCategoryEmulators}" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}"/>
+                                                            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                        <Button Content="+ ADD CUSTOM APP" Command="{Binding AddCustomWorkloadAppCommand}" Style="{StaticResource PillFilterButton}" Margin="0,0,6,0" Padding="12,4" Foreground="{DynamicResource AccentBrush}" BorderBrush="{DynamicResource AccentBrush}"/>
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Background="#11000000" BorderBrush="#22FFFFFF" BorderThickness="1" CornerRadius="4" Padding="8,4" Width="200">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <TextBox Grid.Column="1" Text="{Binding InventorySearchQuery, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0" Foreground="White" FontSize="11" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <ItemsControl ItemsSource="{Binding FilteredInventory}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#06FFFFFF" BorderBrush="#0DFFFFFF" BorderThickness="0,0,0,1" Padding="14,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="260"/>
+                                                    <ColumnDefinition Width="100"/>
+                                                    <ColumnDefinition Width="130"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,0">
+                                                    <TextBlock Text="{Binding DisplayName}" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Text="{Binding InstallationPathDisplay}" FontSize="8" Foreground="{StaticResource TextMutedBrush}" TextTrimming="CharacterEllipsis" Margin="0,1,0,0"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="TYPE" FontSize="7" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                                    <TextBlock Text="{Binding TypeDisplay}" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                                    <TextBlock Text="EXECUTABLE" FontSize="7" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                                    <TextBlock Text="{Binding ExecutableName, StringFormat='{}{0}.exe'}" FontSize="9" Foreground="{StaticResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="3" VerticalAlignment="Center" Margin="4,0">
+                                                    <TextBlock Text="DISCOVERY" FontSize="7" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                                    <TextBlock Text="{Binding DetectionSource}" FontSize="8" Foreground="#10B981" TextTrimming="CharacterEllipsis"/>
+                                                </StackPanel>
+
+                                                <Border Grid.Column="4" CornerRadius="3" Padding="8,3" Background="#11FFFFFF" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding RunningStatusDisplay}" FontSize="8" FontWeight="Bold" Foreground="{Binding RunningStatusBrush}"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="12">
+                                <Button Content="FORCE RESCAN INVENTORY" Command="{Binding RescanInventoryCommand}" Style="{StaticResource PillFilterButton}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- CUSTOM CONFIGURATION PANEL -->
+                <StackPanel Visibility="{Binding IsWorkloadCustomView, Converter={StaticResource BoolToVis}}">
+                    <!-- SEARCH & SELECT TARGET APP -->
+                    <Border Style="{StaticResource GlassCardStyle}" Padding="16,14" Margin="0,0,0,12">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,8">
+                                <TextBlock Text="SEARCH &amp; SELECT WORKLOAD APPLICATION TO CONFIGURE" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </Grid>
+                            <Border Background="#11000000" BorderBrush="#22FFFFFF" BorderThickness="1" CornerRadius="4" Padding="8,6" Margin="0,0,0,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <TextBox Grid.Column="1" Text="{Binding InventorySearchQuery, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0" Foreground="White" FontSize="11" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <ScrollViewer MaxHeight="250" VerticalScrollBarVisibility="Auto" Margin="0,0,0,10">
+                                <ItemsControl ItemsSource="{Binding FilteredInventory}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#06FFFFFF" BorderBrush="{Binding SelectionBorderBrush}" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="0,0,0,4">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="180"/>
+                                                        <ColumnDefinition Width="90"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    
+                                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding DisplayName}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Text="{Binding InstallationPathDisplay}" FontSize="8" Foreground="{StaticResource TextMutedBrush}" TextTrimming="CharacterEllipsis"/>
+                                                    </StackPanel>
+                                                    
+                                                    <TextBlock Grid.Column="1" Text="{Binding TypeDisplay}" FontSize="9" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding ExecutableName, StringFormat='{}{0}.exe'}" FontSize="9" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                    
+                                                    <Button Grid.Column="3" Content="BROWSE" Style="{StaticResource PillFilterButton}"
+                                                            Command="{Binding DataContext.BrowseExecutableForWorkloadCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding}" Padding="8,4" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="8"/>
+
+                                                    <Button Grid.Column="4" Content="{Binding SelectButtonText}" Foreground="{Binding SelectButtonBrush}" BorderBrush="{Binding SelectButtonBrush}" Background="#11FFFFFF" BorderThickness="1"
+                                                            Command="{Binding DataContext.SelectCustomAppCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding}" Padding="12,4" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="9"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- SELECTED APP CONFIGURATION EDITOR -->
+                    <Border Style="{StaticResource GlassCardStyle}" Padding="18,14" Margin="0,0,0,14" Visibility="{Binding HasSelectedCustomApp, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="SELECTED TARGET CONFIGURATION" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                        <TextBlock Text="{Binding CustomSelectedAppName}" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                        <TextBlock Text="{Binding CustomSelectedAppType, StringFormat='  |  {0}'}" FontSize="9" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Bottom" Margin="0,0,0,1"/>
+                                        <TextBlock Text="{Binding CustomSelectedAppStatus, StringFormat='  |  {0}'}" FontSize="9" FontWeight="Bold" Foreground="#10B981" VerticalAlignment="Bottom" Margin="0,0,0,1"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding CustomSelectedAppExe, StringFormat='Executable: {0}.exe'}" FontSize="9" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="SAVE PROFILE" Style="{StaticResource PrimaryOptimizationButton}"
+                                        Command="{Binding SaveCustomAppProfileCommand}" Height="34" Padding="16,0" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <!-- Options toggles -->
+                            <ItemsControl ItemsSource="{Binding AvailableOptions}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#06FFFFFF" BorderBrush="#0DFFFFFF" BorderThickness="1" CornerRadius="6" Padding="14,10" Margin="0,0,0,6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Name}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                                        <Border Margin="8,0,0,0" Padding="4,1" CornerRadius="3" Background="#1AFFFFFF">
+                                                            <TextBlock Text="{Binding Category}" FontSize="7" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding Description}" FontSize="9" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <CheckBox Grid.Column="1" IsChecked="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Status}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                </CheckBox>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- SAVED PROFILES LIST -->
+                    <TextBlock Text="SAVED CUSTOM PROFILES" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="0,8,0,8"/>
+                    <ItemsControl ItemsSource="{Binding SavedProfiles}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource GlassCardStyle}" Padding="16,12" Margin="0,0,0,8" MinHeight="58">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Width="34" Height="34" CornerRadius="6" Background="#11FFFFFF" Margin="0,0,14,0" VerticalAlignment="Center">
+                                            <TextBlock Text="&#xE7FC;" FontFamily="Segoe MDL2 Assets" FontSize="15" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,12,0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding ApplicationName}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                                <Border Margin="8,0,0,0" Padding="5,1" CornerRadius="3" Background="#11FFFFFF" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding TypeDisplay}" FontSize="8" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding ExecutableName, StringFormat='Executable: {0}.exe'}" FontSize="9" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="10,0">
+                                            <TextBlock Text="CONFIGURED" FontSize="7" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                            <TextBlock Text="{Binding OptimizationSummaryDisplay}" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                        </StackPanel>
+                                        <Border Grid.Column="3" CornerRadius="3" Padding="8,3" Background="#1410B981" VerticalAlignment="Center" Margin="10,0">
+                                            <TextBlock Text="{Binding StatusDisplay}" FontSize="8" FontWeight="Bold" Foreground="#10B981"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
+                                            <Button Style="{StaticResource PillFilterButton}"
+                                                    Command="{Binding DataContext.ToggleCustomProfileCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" Padding="12,5" Margin="0,0,6,0">
+                                                <TextBlock Text="TOGGLE" FontSize="9" FontWeight="SemiBold"/>
+                                            </Button>
+                                            <Button Content="DELETE" Style="{StaticResource PillFilterButton}"
+                                                    Command="{Binding DataContext.DeleteCustomProfileCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" Padding="12,5" Foreground="#EF4444" BorderBrush="#33EF4444"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- ======================================================== -->
+            <!-- TAB 3: POWER PLAN OPTIMIZATION & STARTUP MANAGER         -->
+            <!-- ======================================================== -->
+            <StackPanel Visibility="{Binding IsPowerPlanTab, Converter={StaticResource BoolToVis}}">
+
+                <!-- 1. AI RECOMMENDATION & ACTIVE SCHEME BANNER -->
+                <Border Style="{StaticResource GlassCardStyle}" Padding="20,16" Margin="0,0,0,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Left: Recommendation & Hardware Profile -->
+                        <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                <Border Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,2" Margin="0,0,8,0">
+                                    <TextBlock Text="AI POWER RECOMMENDATION" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                </Border>
+                                <Border Background="#1410B981" BorderBrush="#3310B981" BorderThickness="1" CornerRadius="4" Padding="8,2" Margin="0,0,8,0">
+                                    <TextBlock Text="{Binding HardwareTierText, StringFormat='TIER: {0}'}" FontSize="8.5" FontWeight="Bold" Foreground="#10B981"/>
+                                </Border>
+                                <Border Visibility="{Binding HasBatteryWarning, Converter={StaticResource BoolToVis}}" 
+                                        Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBorderSubtleBrush}" BorderThickness="1" CornerRadius="4" Padding="8,2">
+                                    <TextBlock Text="{Binding BatteryWarning}" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                </Border>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <TextBlock Text="RECOMMENDED PLAN: " FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding RecommendedPlanName}" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                            </StackPanel>
+
+                            <TextBlock Text="{Binding RecommendationReason}" FontSize="10.5" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="0,2,0,4"/>
+                            
+                            <!-- Hardware & Workload Diagnostics -->
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <TextBlock Text="HARDWARE: " FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Text="{Binding HardwareSummaryText}" FontSize="8.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,14,0"/>
+                                <TextBlock Text="WORKLOAD: " FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Text="{Binding DetectedWorkloadText}" FontSize="8.5" Foreground="{DynamicResource AccentBrush}" Margin="4,0,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Right: Active Status & Action Buttons -->
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,8">
+                                <TextBlock Text="CURRENT ACTIVE: " FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                <Border Background="#1410B981" BorderBrush="#3310B981" BorderThickness="1" CornerRadius="4" Padding="8,3" Margin="6,0,0,0">
+                                    <TextBlock Text="{Binding CurrentActivePlanName}" FontSize="10" FontWeight="Bold" Foreground="#10B981"/>
+                                </Border>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Content="+ CREATE POWER PLAN"
+                                        Command="{Binding OpenCreatePlanModalCommand}"
+                                        Style="{StaticResource PillFilterButton}"
+                                        Foreground="#A78BFA"
+                                        BorderBrush="{DynamicResource AccentBorderBrush}"
+                                        Background="{DynamicResource AccentSoftBrush}"
+                                        ToolTip="Create and configure a new named Windows power scheme"
+                                        Padding="14,6" Margin="0,0,6,0"/>
+
+                                <Button Content="RESTORE PREVIOUS"
+                                        Command="{Binding RestorePreviousPowerPlanCommand}"
+                                        IsEnabled="{Binding CanRestorePreviousPlan}"
+                                        Style="{StaticResource PillFilterButton}"
+                                        ToolTip="{Binding PreviousPlanName, StringFormat='Restore to {0}'}"
+                                        Padding="12,6" Margin="0,0,6,0"/>
+
+                                <Button Content="REFRESH"
+                                        Command="{Binding RefreshPowerPlansCommand}"
+                                        Style="{StaticResource PillFilterButton}"
+                                        Padding="12,6"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- 2. STARTUP AUTO-APPLY & WINDOWS STARTUP ENFORCEMENT -->
+                <Border Style="{StaticResource GlassCardStyle}" Padding="18,14" Margin="0,0,0,12" Background="#0AFFFFFF">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Icon -->
+                        <Border Grid.Column="0" Width="38" Height="38" CornerRadius="8" Background="#143B82F6" Margin="0,0,14,0" VerticalAlignment="Center">
+                            <TextBlock Text="&#xE7E8;" FontFamily="Segoe MDL2 Assets" FontSize="18" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <!-- Startup Info -->
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="AUTO ENABLE ON WINDOWS STARTUP" FontSize="11.5" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                <Border Margin="8,0,0,0" Padding="6,1" CornerRadius="3" Background="#14FFFFFF" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding StartupStatusText}" FontSize="8" FontWeight="Bold" Foreground="{Binding StartupStatusBrush}"/>
+                                </Border>
+                            </StackPanel>
+                            <TextBlock Text="{Binding StartupPowerPlanName, StringFormat='Target Startup Scheme: {0}'}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                            <TextBlock Text="{Binding StartupStatusMessage}" FontSize="8.5" Foreground="{StaticResource TextMutedBrush}" Margin="0,1,0,0"/>
+                        </StackPanel>
+
+                        <!-- Controls -->
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                            <CheckBox IsChecked="{Binding IsContinuousEnforcementEnabled, Mode=OneWay}" 
+                                      Command="{Binding ToggleContinuousEnforcementCommand}"
+                                      VerticalAlignment="Center" Margin="0,0,14,0">
+                                <TextBlock Text="Continuous Enforcement" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            </CheckBox>
+
+                            <Button Command="{Binding ToggleAutoEnableOnStartupCommand}"
+                                    Padding="14,6">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                        <Setter Property="Content" Value="ENABLE STARTUP APPLY"/>
+                                        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsAutoEnableOnStartup}" Value="True">
+                                                <Setter Property="Content" Value="AUTO-ENABLE ACTIVE"/>
+                                                <Setter Property="Background" Value="#1410B981"/>
+                                                <Setter Property="BorderBrush" Value="#6610B981"/>
+                                                <Setter Property="Foreground" Value="#10B981"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- OPERATION STATUS BANNER -->
+                <Border Visibility="{Binding HasPowerOperationStatus, Converter={StaticResource BoolToVis}}"
+                        Background="#11FFFFFF" BorderBrush="#22FFFFFF" BorderThickness="1" CornerRadius="6" Padding="14,8" Margin="0,0,0,12">
+                    <TextBlock Text="{Binding PowerOperationStatus}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                </Border>
+
+                <!-- 3. CREATE CUSTOM PLAN MODAL / EXPANDER -->
+                <Border Visibility="{Binding IsCreatePlanModalOpen, Converter={StaticResource BoolToVis}}"
+                        Style="{StaticResource GlassCardStyle}" Padding="18,14" Margin="0,0,0,12" Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBorderBrush}">
+                    <StackPanel>
+                        <TextBlock Text="CREATE NEW CUSTOM WINDOWS POWER PLAN" FontSize="11" FontWeight="Bold" Foreground="#A78BFA" Margin="0,0,0,8"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="PLAN NAME" FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,4"/>
+                                <TextBox Text="{Binding NewCustomPlanName, UpdateSourceTrigger=PropertyChanged}" 
+                                         Background="#14FFFFFF" Foreground="{StaticResource TextPrimaryBrush}" BorderBrush="#33FFFFFF" Padding="8,8" FontSize="11"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="DUPLICATE REAL BASE SCHEME" FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,4"/>
+                                <ComboBox ItemsSource="{Binding InstalledBasePlans}" 
+                                          SelectedItem="{Binding SelectedBasePlanForCreation}"
+                                          Style="{StaticResource DarkComboBoxStyle}"
+                                          Padding="10,8" FontSize="11">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="2,3">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="11.5" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                                    <TextBlock Text="{Binding Guid, StringFormat='GUID: {0}'}" FontSize="8" Foreground="{StaticResource TextMutedBrush}"/>
+                                                </StackPanel>
+                                                <Border Grid.Column="1" Background="#14FFFFFF" CornerRadius="3" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding PlanTypeDisplay}" FontSize="8" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                </Border>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="CANCEL" Command="{Binding CloseCreatePlanModalCommand}" Style="{StaticResource PillFilterButton}" Padding="14,6" Margin="0,0,8,0"/>
+                            <Button Content="CREATE &amp; VERIFY IN WINDOWS" Command="{Binding CreateCustomNamedPlanCommand}" Style="{StaticResource PillFilterButton}"
+                                    Foreground="#A78BFA" BorderBrush="{DynamicResource AccentBorderBrush}" Background="#228B5CF6" Padding="16,6"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- 4. PLAN SETTINGS CUSTOMIZATION / EDIT PANEL -->
+                <Border Visibility="{Binding IsPlanEditorOpen, Converter={StaticResource BoolToVis}}"
+                        Style="{StaticResource GlassCardStyle}" Padding="18,14" Margin="0,0,0,12" Background="#1110B981" BorderBrush="#3310B981">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="{Binding EditingPlan.Name, StringFormat='CUSTOMIZING SETTINGS: {0}'}" FontSize="12" FontWeight="Bold" Foreground="#10B981"/>
+                                <TextBlock Text="{Binding EditingPlan.Guid, StringFormat='Scheme GUID: {0}'}" FontSize="8.5" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <Button Grid.Column="1" Content="CLOSE EDITOR" Command="{Binding ClosePlanEditorCommand}" Style="{StaticResource PillFilterButton}" Padding="10,4"/>
+                        </Grid>
+
+                        <!-- Settings Items Table -->
+                        <ItemsControl ItemsSource="{Binding EditingPlan.Settings}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#08FFFFFF" BorderBrush="#14FFFFFF" BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,0,0,8">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="140"/>
+                                                <ColumnDefinition Width="140"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Setting Name & Description -->
+                                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,12,0">
+                                                <TextBlock Text="{Binding Name}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                                <TextBlock Text="{Binding Description}" FontSize="8.5" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                                            </StackPanel>
+
+                                            <!-- AC Value -->
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="AC (PLUGGED IN): " FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                                    <TextBlock Text="{Binding TargetAC, StringFormat='{}{0}%'}" FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                                </StackPanel>
+                                                <Slider Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}" Value="{Binding TargetAC, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,0"/>
+                                            </StackPanel>
+
+                                            <!-- DC Value -->
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="0,0,10,0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="DC (ON BATTERY): " FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                                    <TextBlock Text="{Binding TargetDC, StringFormat='{}{0}%'}" FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                                </StackPanel>
+                                                <Slider Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}" Value="{Binding TargetDC, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,0"/>
+                                            </StackPanel>
+
+                                            <!-- Save Button -->
+                                            <Button Grid.Column="3" Content="SAVE" Command="{Binding DataContext.SavePlanSettingCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" Style="{StaticResource PillFilterButton}"
+                                                    Foreground="#10B981" BorderBrush="#4410B981" Padding="10,6" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
+                            <Button Content="APPLY &amp; VERIFY ALL SETTINGS" Command="{Binding SaveAllPlanSettingsCommand}" 
+                                    Style="{StaticResource PillFilterButton}" Foreground="{StaticResource TextPrimaryBrush}"
+                                    BorderBrush="{DynamicResource AccentBrush}" Background="{DynamicResource AccentSoftBrush}" Padding="18,8"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- ======================================================== -->
+                <!-- 5. SECTION: ERROR OPTIMIZER AI POWER PLANS              -->
+                <!-- ======================================================== -->
+                <Border Style="{StaticResource GlassCardStyle}" Padding="18,14" Margin="0,0,0,12">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="ERROR OPTIMIZER AI" FontSize="11.5" FontWeight="Bold" Foreground="#EC4899"/>
+                                    <Border Margin="8,0,0,0" Padding="6,1" CornerRadius="3" Background="#14EC4899" VerticalAlignment="Center">
+                                        <TextBlock Text="MACHINE-SPECIFIC POLICIES" FontSize="8" FontWeight="Bold" Foreground="#EC4899"/>
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="Machine-specific AI power schemes calibrated for your detected processor, thermals, and workload." FontSize="9.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button Content="AI BATTERY EFFICIENCY"
+                                        Command="{Binding CreateAiBatteryEfficiencyPlanCommand}"
+                                        Style="{StaticResource PillFilterButton}"
+                                        Foreground="#10B981" BorderBrush="#6610B981" Background="#1410B981"
+                                        ToolTip="Generates or applies the machine-specific AI Battery Efficiency power scheme"
+                                        Padding="12,6" Margin="0,0,6,0"/>
+
+                                <Button Content="AI MAX PERFORMANCE"
+                                        Command="{Binding CreateAiMaxPerformancePlanCommand}"
+                                        Style="{StaticResource PillFilterButton}"
+                                        Foreground="#EC4899" BorderBrush="#66EC4899" Background="#14EC4899"
+                                        ToolTip="Generates or applies the machine-specific AI Max Performance power scheme"
+                                        Padding="12,6"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding AiPowerPlans}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#08FFFFFF" BorderBrush="#14FFFFFF" BorderThickness="1" CornerRadius="8" Padding="16,14" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Icon -->
+                                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="8" Background="#14EC4899" Margin="0,0,14,0" VerticalAlignment="Center">
+                                                <TextBlock Text="&#xE7E8;" FontFamily="Segoe MDL2 Assets" FontSize="18" Foreground="#EC4899" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <!-- Name, GUID, Description, Ownership Badge & AC/DC Policy -->
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,14,0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                                    <Border Margin="8,0,0,0" Padding="6,1" CornerRadius="3" Background="#11FFFFFF" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding StatusText}" FontSize="8" FontWeight="Bold" Foreground="{Binding StatusBrush}"/>
+                                                    </Border>
+                                                    <Border Margin="6,0,0,0" Padding="6,1" CornerRadius="3" Background="#14EC4899" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding PlanTypeDisplay}" FontSize="7.5" FontWeight="SemiBold" Foreground="#EC4899"/>
+                                                    </Border>
+                                                    <!-- STARTUP BADGE -->
+                                                    <Border Visibility="{Binding IsStartupPlan, Converter={StaticResource BoolToVis}}" 
+                                                            Margin="6,0,0,0" Padding="6,1" CornerRadius="3" Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBorderBrush}" BorderThickness="1" VerticalAlignment="Center">
+                                                        <TextBlock Text="AUTO-ENABLE ON STARTUP" FontSize="7.5" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Description}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                
+                                                <!-- Policy Row -->
+                                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                    <Border Background="#10FFFFFF" CornerRadius="3" Padding="5,1" Margin="0,0,6,0">
+                                                        <TextBlock Text="{Binding AcPerformanceProfile, StringFormat='AC: {0}'}" FontSize="7.5" FontWeight="SemiBold" Foreground="{DynamicResource AccentBrush}"/>
+                                                    </Border>
+                                                    <Border Background="#10FFFFFF" CornerRadius="3" Padding="5,1" Margin="0,0,6,0">
+                                                        <TextBlock Text="{Binding DcPerformanceProfile, StringFormat='DC: {0}'}" FontSize="7.5" FontWeight="SemiBold" Foreground="#F59E0B"/>
+                                                    </Border>
+                                                    <TextBlock Text="{Binding Guid, StringFormat='GUID: {0}'}" FontSize="8" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <!-- Risk & Performance Badge -->
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="10,0,14,0">
+                                                <TextBlock Text="SAFETY" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="{Binding RiskLevel, Mode=OneWay}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                                <TextBlock Text="{Binding BatteryImpact}" FontSize="7" FontWeight="SemiBold" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                            </StackPanel>
+
+                                            <!-- Action Buttons -->
+                                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <!-- ACTIVE CHECK -->
+                                                <StackPanel Orientation="Horizontal" Visibility="{Binding IsActive, Converter={StaticResource BoolToVis}}" VerticalAlignment="Center" Margin="0,0,8,0">
+                                                    <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="#10B981" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="ACTIVE" FontSize="10" FontWeight="Bold" Foreground="#10B981" VerticalAlignment="Center"/>
+                                                </StackPanel>
+
+                                                <!-- APPLY BUTTON -->
+                                                <Button Content="APPLY"
+                                                        Visibility="{Binding CanApply, Converter={StaticResource BoolToVis}}"
+                                                        Command="{Binding DataContext.ApplyPowerPlanCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Style="{StaticResource PillFilterButton}"
+                                                        Foreground="{StaticResource TextPrimaryBrush}"
+                                                        BorderBrush="{DynamicResource AccentBrush}"
+                                                        Background="{DynamicResource AccentSoftBrush}"
+                                                        Padding="14,7" Margin="0,0,4,0"/>
+
+                                                <!-- STARTUP TOGGLE BUTTON -->
+                                                <Button Command="{Binding DataContext.SetStartupPowerPlanCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Padding="10,7" Margin="0,0,4,0">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                                            <Setter Property="Content" Value="STARTUP: OFF"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsStartupPlan}" Value="True">
+                                                                    <Setter Property="Content" Value="STARTUP: ON"/>
+                                                                    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                                                                    <Setter Property="BorderBrush" Value="#663B82F6"/>
+                                                                    <Setter Property="Background" Value="#143B82F6"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                </Button>
+
+                                                <!-- DELETE BUTTON (For Custom AI Plan) -->
+                                                <Button Content="DELETE"
+                                                        Visibility="{Binding CanDelete, Converter={StaticResource BoolToVis}}"
+                                                        Command="{Binding DataContext.DeleteCustomAiPlanCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Style="{StaticResource PillFilterButton}"
+                                                        Foreground="#EF4444"
+                                                        BorderBrush="#66EF4444"
+                                                        Background="#14EF4444"
+                                                        Padding="10,7"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- ======================================================== -->
+                <!-- 6. SECTION: WINDOWS POWER PLANS                         -->
+                <!-- ======================================================== -->
+                <Border Style="{StaticResource GlassCardStyle}" Padding="18,14" Margin="0,0,0,12">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="WINDOWS POWER PLANS" FontSize="11.5" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    <Border Margin="8,0,0,0" Padding="6,1" CornerRadius="3" Background="#14FFFFFF" VerticalAlignment="Center">
+                                        <TextBlock Text="AUTHORITATIVE DETECTION" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="Real Windows and OEM power schemes installed on this machine (Balanced, High performance, Ultimate Performance, Power saver, OEM)." FontSize="9.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding WindowsPowerPlans}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#08FFFFFF" BorderBrush="#14FFFFFF" BorderThickness="1" CornerRadius="8" Padding="16,14" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Icon -->
+                                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="8" Background="#11FFFFFF" Margin="0,0,14,0" VerticalAlignment="Center">
+                                                <TextBlock Text="&#xE7E8;" FontFamily="Segoe MDL2 Assets" FontSize="18" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <!-- Name, GUID, Description, Ownership Badge & AC/DC Policy -->
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,14,0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                                    <Border Margin="8,0,0,0" Padding="6,1" CornerRadius="3" Background="#11FFFFFF" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding StatusText}" FontSize="8" FontWeight="Bold" Foreground="{Binding StatusBrush}"/>
+                                                    </Border>
+                                                    <Border Margin="6,0,0,0" Padding="6,1" CornerRadius="3" Background="#0DFFFFFF" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding PlanTypeDisplay}" FontSize="7.5" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                    </Border>
+                                                    <!-- STARTUP BADGE -->
+                                                    <Border Visibility="{Binding IsStartupPlan, Converter={StaticResource BoolToVis}}" 
+                                                            Margin="6,0,0,0" Padding="6,1" CornerRadius="3" Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBorderBrush}" BorderThickness="1" VerticalAlignment="Center">
+                                                        <TextBlock Text="AUTO-ENABLE ON STARTUP" FontSize="7.5" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Description}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                
+                                                <!-- Policy Row -->
+                                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                    <Border Background="#10FFFFFF" CornerRadius="3" Padding="5,1" Margin="0,0,6,0">
+                                                        <TextBlock Text="{Binding AcPerformanceProfile, StringFormat='AC: {0}'}" FontSize="7.5" FontWeight="SemiBold" Foreground="{DynamicResource AccentBrush}"/>
+                                                    </Border>
+                                                    <Border Background="#10FFFFFF" CornerRadius="3" Padding="5,1" Margin="0,0,6,0">
+                                                        <TextBlock Text="{Binding DcPerformanceProfile, StringFormat='DC: {0}'}" FontSize="7.5" FontWeight="SemiBold" Foreground="#F59E0B"/>
+                                                    </Border>
+                                                    <TextBlock Text="{Binding Guid, StringFormat='GUID: {0}'}" FontSize="8" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <!-- Risk & Performance Badge -->
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="10,0,14,0">
+                                                <TextBlock Text="SAFETY" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="{Binding RiskLevel, Mode=OneWay}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                                <TextBlock Text="{Binding BatteryImpact}" FontSize="7" FontWeight="SemiBold" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                            </StackPanel>
+
+                                            <!-- Action Buttons -->
+                                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <!-- ACTIVE CHECK -->
+                                                <StackPanel Orientation="Horizontal" Visibility="{Binding IsActive, Converter={StaticResource BoolToVis}}" VerticalAlignment="Center" Margin="0,0,8,0">
+                                                    <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="#10B981" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="ACTIVE" FontSize="10" FontWeight="Bold" Foreground="#10B981" VerticalAlignment="Center"/>
+                                                </StackPanel>
+
+                                                <!-- APPLY BUTTON -->
+                                                <Button Content="APPLY"
+                                                        Visibility="{Binding CanApply, Converter={StaticResource BoolToVis}}"
+                                                        Command="{Binding DataContext.ApplyPowerPlanCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Style="{StaticResource PillFilterButton}"
+                                                        Foreground="{StaticResource TextPrimaryBrush}"
+                                                        BorderBrush="{DynamicResource AccentBrush}"
+                                                        Background="{DynamicResource AccentSoftBrush}"
+                                                        Padding="14,7" Margin="0,0,4,0"/>
+
+                                                <!-- STARTUP TOGGLE BUTTON -->
+                                                <Button Command="{Binding DataContext.SetStartupPowerPlanCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Padding="10,7" Margin="0,0,4,0">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource PillFilterButton}">
+                                                            <Setter Property="Content" Value="STARTUP: OFF"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsStartupPlan}" Value="True">
+                                                                    <Setter Property="Content" Value="STARTUP: ON"/>
+                                                                    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                                                                    <Setter Property="BorderBrush" Value="#663B82F6"/>
+                                                                    <Setter Property="Background" Value="#143B82F6"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                </Button>
+
+                                                <!-- ENABLE ULTIMATE BUTTON -->
+                                                <Button Content="ENABLE ULTIMATE"
+                                                        Visibility="{Binding CanEnable, Converter={StaticResource BoolToVis}}"
+                                                        Command="{Binding DataContext.EnableUltimatePerformanceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        Style="{StaticResource PillFilterButton}"
+                                                        Foreground="#F59E0B"
+                                                        BorderBrush="#66F59E0B"
+                                                        Background="#14F59E0B"
+                                                        Padding="14,7"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+
+            </StackPanel>
+    </ScrollViewer>
+</UserControl>

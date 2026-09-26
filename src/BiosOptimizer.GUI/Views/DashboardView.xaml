@@ -1,0 +1,1088 @@
+<UserControl x:Class="BiosOptimizer.GUI.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:BiosOptimizer.GUI.Controls"
+             Background="Transparent"
+             UseLayoutRounding="True" SnapsToDevicePixels="True"
+             TextOptions.TextFormattingMode="Display"
+             TextOptions.TextRenderingMode="ClearType">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <!-- ============================================================
+             3D METRIC PROGRESS BAR
+             ============================================================ -->
+        <Style x:Key="MetricBar" TargetType="ProgressBar">
+            <Setter Property="Height" Value="4"/>
+            <Setter Property="Background" Value="#1AFFFFFF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}" CornerRadius="2"/>
+                            <Border x:Name="PART_Track"/>
+                            <Border x:Name="PART_Indicator" CornerRadius="2"
+                                    Background="{TemplateBinding Foreground}"
+                                    HorizontalAlignment="Left">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#000000" BlurRadius="6" ShadowDepth="0" Opacity="0.9"/>
+                                </Border.Effect>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ============================================================
+             3D METRIC TILE — used for CPU/GPU/RAM/DISK tiles inside monitor
+             ============================================================ -->
+        <Style x:Key="MetricTile3D" TargetType="Border">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#1A1E2A" Offset="0"/>
+                        <GradientStop Color="#0F111A" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderBrush" Value="#22FFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="14,11"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#000000" BlurRadius="10" ShadowDepth="3" Opacity="0.5"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="#000000" BlurRadius="16" ShadowDepth="2" Opacity="0.45"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ============================================================
+             3D CHIP BADGE — hardware spec chips
+             ============================================================ -->
+        <Style x:Key="SpecChip3D" TargetType="Border">
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#22FFFFFF"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="0,3,8,3"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#000000" BlurRadius="6" ShadowDepth="2" Opacity="0.4"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#1E2233" Offset="0"/>
+                        <GradientStop Color="#10121C" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ============================================================
+             SUMMARY ITEM ROW STYLE
+             ============================================================ -->
+        <Style x:Key="SummaryItemRow" TargetType="Border">
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#1CFFFFFF"/>
+            <Setter Property="Padding" Value="16,11"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#000000" BlurRadius="8" ShadowDepth="2" Opacity="0.35"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#15192B" Offset="0"/>
+                        <GradientStop Color="#0A0C16" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                    <Setter Property="Background" Value="#1E16243A"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ============================================================
+             FOOTER PANEL TILE
+             ============================================================ -->
+        <Style x:Key="FooterTile3D" TargetType="Border">
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#18FFFFFF"/>
+            <Setter Property="Padding" Value="14,10"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#000000" BlurRadius="8" ShadowDepth="2" Opacity="0.4"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#181C2A" Offset="0"/>
+                        <GradientStop Color="#0D0F1A" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="Transparent">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Style="{StaticResource SlimScrollViewer}">
+            <Grid Margin="24,18,24,28">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>  <!-- 0: Header -->
+                    <RowDefinition Height="Auto"/>  <!-- 1: Top Hero Hardware & Siri Intelligence Strip -->
+                    <RowDefinition Height="Auto"/>  <!-- 2: Global Execution Live Banner -->
+                    <RowDefinition Height="Auto"/>  <!-- 3: LIVE SYSTEM MONITOR (Primary) -->
+                    <RowDefinition Height="18"/>    <!-- 4: Spacer -->
+                    <RowDefinition Height="Auto"/>  <!-- 5: QUICK ACTIONS (Real Router Navigation) -->
+                    <RowDefinition Height="18"/>    <!-- 6: Spacer -->
+                    <RowDefinition Height="Auto"/>  <!-- 7: OPTIMIZATION SUMMARY (Live System Conditions) -->
+                    <RowDefinition Height="18"/>    <!-- 8: Spacer -->
+                    <RowDefinition Height="Auto"/>  <!-- 9: LIVE MEMORY, STORAGE & POWER (2-Col) -->
+                    <RowDefinition Height="18"/>    <!-- 10: Spacer -->
+                    <RowDefinition Height="Auto"/>  <!-- 11: FOOTER STATUS & AUTO-RUN SCHEDULER -->
+                </Grid.RowDefinitions>
+
+                <!-- ======================================================== -->
+                <!-- ROW 0: HEADER WITH REFRESH & SERVICE STATUS              -->
+                <!-- ======================================================== -->
+                <Grid Grid.Row="0" Margin="0,0,0,18">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="SYSTEM DASHBOARD" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,10,0">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="#000000" BlurRadius="12" ShadowDepth="0" Opacity="0.5"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                            
+                        </StackPanel>
+                        <TextBlock Text="Real-time Windows system telemetry, physical memory management, and live hardware control" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding LastRefresh}" FontSize="11" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <Button Style="{StaticResource SecondaryButtonStyle}" Command="{Binding CreateRestorePointCommand}" Padding="12,6" Margin="0,0,8,0"
+                                ToolTip="Create a verified Windows System Restore Point prior to tuning">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xEA18;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="RESTORE POINT" FontSize="10" FontWeight="Bold" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource SecondaryButtonStyle}" Command="{Binding RefreshCommand}" Padding="12,6">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="REFRESH" FontSize="10" FontWeight="Bold" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <!-- ======================================================== -->
+                <!-- ROW 1: TOP HERO — 3D HARDWARE IDENTITY CARD              -->
+                <!-- ======================================================== -->
+                <controls:Card3D Grid.Row="1" Depth="2" IsInteractive="True" IsSpotlightEnabled="True"
+                                 Padding="22,18" Margin="0,0,0,18" CornerRadius="14">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>  <!-- 0: Siri Live Intelligence Score Orb -->
+                            <ColumnDefinition Width="20"/>    <!-- 1: Divider -->
+                            <ColumnDefinition Width="Auto"/>  <!-- 2: Hardware Identity -->
+                            <ColumnDefinition Width="*"/>     <!-- 3: Spec Chips -->
+                            <ColumnDefinition Width="Auto"/>  <!-- 4: Power State -->
+                        </Grid.ColumnDefinitions>
+
+                        <!-- SIRI-STYLE LIVE INTELLIGENCE SCORE ORB -->
+                        <controls:SiriIntelligenceVisualizer Grid.Column="0"
+                                                             Score="{Binding Score}"
+                                                             ScoreLabel="{Binding ScoreLabel}"
+                                                             VerticalAlignment="Center"
+                                                             Width="140" Height="140"/>
+
+                        <!-- Vertical Divider with glow -->
+                        <Border Grid.Column="1" Width="1" VerticalAlignment="Stretch" Margin="0,6">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#00FFFFFF" Offset="0"/>
+                                    <GradientStop Color="#30FFFFFF" Offset="0.5"/>
+                                    <GradientStop Color="#00FFFFFF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+
+                        <!-- Hardware Identity -->
+                        <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="0,0,16,0">
+                            <TextBlock Text="HARDWARE IDENTITY" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="{Binding DeviceName}" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,3,0,0">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="#000000" BlurRadius="8" ShadowDepth="0" Opacity="0.4"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Border CornerRadius="3" Padding="7,2" Margin="0,0,6,0">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#1A10B981" Offset="0"/>
+                                            <GradientStop Color="#0A10B981" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <Border.BorderBrush>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#5010B981" Offset="0"/>
+                                            <GradientStop Color="#2010B981" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.BorderBrush>
+                                    <Border.BorderThickness>1</Border.BorderThickness>
+                                    <TextBlock Text="{Binding OverallStatus}" FontSize="8" FontWeight="Bold" Foreground="#10B981"/>
+                                </Border>
+                                <Border CornerRadius="3" Padding="8,2.5" Margin="0,0,6,0"
+                                        ToolTip="{Binding HardwareTierDescription}"
+                                        Background="{DynamicResource AccentSoftBrush}"
+                                        BorderBrush="{DynamicResource AccentBorderBrush}"
+                                        BorderThickness="1">
+                                    <TextBlock Text="{Binding HardwareTierBadgeText}" FontSize="8.5" FontWeight="Bold"
+                                               Foreground="{DynamicResource AccentBrush}"/>
+                                </Border>
+                                <TextBlock Text="{Binding DetectedWorkload}" FontSize="9" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Hardware Spec Chips — 3D raised style -->
+                        <WrapPanel Grid.Column="3" VerticalAlignment="Center" Orientation="Horizontal">
+                            <Border Style="{StaticResource SpecChip3D}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE7F8;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="{DynamicResource AccentBrush}" Margin="0,0,7,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding CpuHero}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource SpecChip3D}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE7FC;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="{DynamicResource AccentBrush}" Margin="0,0,7,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding GpuHero}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource SpecChip3D}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE950;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="{DynamicResource AccentBrush}" Margin="0,0,7,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding RamHero}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource SpecChip3D}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE753;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="{DynamicResource AccentBrush}" Margin="0,0,7,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding OsHero}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                        </WrapPanel>
+
+                        <!-- Power State -->
+                        <StackPanel Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right">
+                            <Border CornerRadius="6" Padding="12,8" BorderThickness="1" BorderBrush="#20FFFFFF">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#1C2030" Offset="0"/>
+                                        <GradientStop Color="#10121E" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <StackPanel>
+                                    <TextBlock Text="POWER SOURCE" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Right"/>
+                                    <TextBlock Text="{Binding PowerHero}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" HorizontalAlignment="Right" Margin="0,3,0,0"/>
+                                    <TextBlock Text="{Binding PowerPlan}" FontSize="9" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right" Margin="0,1,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </controls:Card3D>
+
+                <!-- ======================================================== -->
+                <!-- ROW 2: GLOBAL OPTIMIZATION PROGRESS (When Executing)     -->
+                <!-- ======================================================== -->
+                <Border Grid.Row="2" BorderThickness="1" CornerRadius="10" Padding="18,14" Margin="0,0,0,18"
+                        Visibility="{Binding IsExecutingGlobalOpt, Converter={StaticResource BoolToVis}}">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#1A1E40" Offset="0"/>
+                            <GradientStop Color="#0F1228" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.BorderBrush>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="{DynamicResource BrandPrimaryColor}" Offset="0"/>
+                            <GradientStop Color="{DynamicResource AccentDarkColor}" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.BorderBrush>
+                    <Border.Effect>
+                        <DropShadowEffect Color="#000000" BlurRadius="18" ShadowDepth="0" Opacity="0.35"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Margin="0,0,0,8">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="13" Foreground="{DynamicResource AccentBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding GlobalOptProfile}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Text=" — " FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Text="{Binding GlobalOptStatus}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock HorizontalAlignment="Right" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}">
+                                <Run Text="{Binding GlobalOptProgress, Mode=OneWay, StringFormat={}{0:F0}}"/><Run Text="%"/>
+                            </TextBlock>
+                        </Grid>
+                        <ProgressBar Grid.Row="1" Style="{StaticResource MetricBar}" Value="{Binding GlobalOptProgress}" Maximum="100" Height="5"/>
+                    </Grid>
+                </Border>
+
+                <!-- ======================================================== -->
+                <!-- ROW 3: LIVE SYSTEM MONITOR — 3D CARD                     -->
+                <!-- ======================================================== -->
+                <controls:Card3D Grid.Row="3" Depth="2" IsInteractive="True" IsSpotlightEnabled="True"
+                                 Padding="22,18" CornerRadius="14">
+                    <StackPanel>
+                        <!-- Header -->
+                        <Grid Margin="0,0,0,14">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Border Width="28" Height="28" CornerRadius="6" Margin="0,0,10,0" VerticalAlignment="Center">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="{DynamicResource AccentColor}" Offset="0"/>
+                                            <GradientStop Color="Transparent" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" FontSize="13" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="LIVE SYSTEM MONITOR" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="#000000" BlurRadius="8" ShadowDepth="0" Opacity="0.35"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding TelemetryStatusBadge}" FontSize="8.5" FontWeight="Bold" Foreground="{Binding TelemetryStatusBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <Border CornerRadius="4" Padding="8,3" BorderThickness="1">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#1A10B981" Offset="0"/>
+                                            <GradientStop Color="#0A10B981" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <Border.BorderBrush>
+                                        <SolidColorBrush Color="#3310B981"/>
+                                    </Border.BorderBrush>
+                                    <TextBlock Text="SYNCHRONIZED" FontSize="8" FontWeight="Bold" Foreground="#10B981"/>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- 4 Metric Tiles -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- CPU Tile -->
+                            <Border Grid.Column="0" Style="{StaticResource MetricTile3D}">
+                                <StackPanel>
+                                    <Grid>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE7F8;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="CPU" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <TextBlock HorizontalAlignment="Right" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}">
+                                            <TextBlock.Effect>
+                                                <DropShadowEffect Color="#000000" BlurRadius="8" ShadowDepth="0" Opacity="0.7"/>
+                                            </TextBlock.Effect>
+                                            <Run Text="{Binding CpuPercent, Mode=OneWay}"/><Run Text="%"/>
+                                        </TextBlock>
+                                    </Grid>
+                                    <ProgressBar Style="{StaticResource MetricBar}" Value="{Binding CpuPercent, Mode=OneWay}" Maximum="100" Margin="0,8,0,0"/>
+                                    <Grid Margin="0,5,0,0">
+                                        <TextBlock Text="{Binding CpuFrequencyText}" FontSize="8" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock Text="{Binding CpuTempText}" FontSize="8" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- GPU Tile -->
+                            <Border Grid.Column="2" Style="{StaticResource MetricTile3D}">
+                                <StackPanel>
+                                    <Grid>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE7FC;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="GPU" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <TextBlock HorizontalAlignment="Right" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}">
+                                            <TextBlock.Effect>
+                                                <DropShadowEffect Color="#000000" BlurRadius="8" ShadowDepth="0" Opacity="0.7"/>
+                                            </TextBlock.Effect>
+                                            <Run Text="{Binding PrimaryGpuPercent, Mode=OneWay}"/><Run Text="%"/>
+                                        </TextBlock>
+                                    </Grid>
+                                    <ProgressBar Style="{StaticResource MetricBar}" Value="{Binding PrimaryGpuPercent, Mode=OneWay}" Maximum="100" Margin="0,8,0,0"/>
+                                    <TextBlock Text="{Binding GpuHero}" FontSize="8" Foreground="{StaticResource TextMutedBrush}" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- RAM Tile -->
+                            <Border Grid.Column="4" Style="{StaticResource MetricTile3D}">
+                                <StackPanel>
+                                    <Grid>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE950;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="RAM" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <TextBlock HorizontalAlignment="Right" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}">
+                                            <TextBlock.Effect>
+                                                <DropShadowEffect Color="#000000" BlurRadius="8" ShadowDepth="0" Opacity="0.7"/>
+                                            </TextBlock.Effect>
+                                            <Run Text="{Binding RamPercent, Mode=OneWay}"/><Run Text="%"/>
+                                        </TextBlock>
+                                    </Grid>
+                                    <ProgressBar Style="{StaticResource MetricBar}" Value="{Binding RamPercent, Mode=OneWay}" Maximum="100" Margin="0,8,0,0"/>
+                                    <Grid Margin="0,5,0,0">
+                                        <TextBlock Text="{Binding RamInfo}" FontSize="8" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock Text="{Binding RamAvailableText}" FontSize="8" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- DISK & NETWORK Tile -->
+                            <Border Grid.Column="6" Style="{StaticResource MetricTile3D}">
+                                <StackPanel>
+                                    <Grid>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="DISK &amp; NET" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <TextBlock HorizontalAlignment="Right" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center">
+                                            <Run Text="{Binding ProcessCount, Mode=OneWay}"/><Run Text=" procs" FontSize="8" Foreground="{StaticResource TextMutedBrush}"/>
+                                        </TextBlock>
+                                    </Grid>
+                                    <Grid Margin="0,8,0,0">
+                                        <TextBlock Text="{Binding DiskThroughputText}" FontSize="8" Foreground="{StaticResource TextMutedBrush}"/>
+                                    </Grid>
+                                    <Grid Margin="0,3,0,0">
+                                        <TextBlock Text="{Binding NetworkThroughputText}" FontSize="8" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </controls:Card3D>
+
+                <!-- ======================================================== -->
+                <!-- ROW 5: QUICK ACTIONS — 3D CARD                           -->
+                <!-- ======================================================== -->
+                <controls:Card3D Grid.Row="5" Depth="1" IsInteractive="True" IsSpotlightEnabled="True"
+                                 Padding="22,18" CornerRadius="14">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,12">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Border Width="28" Height="28" CornerRadius="6" Margin="0,0,10,0" VerticalAlignment="Center">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="{DynamicResource AccentColor}" Offset="0"/>
+                                            <GradientStop Color="Transparent" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <TextBlock Text="&#xE735;" FontFamily="Segoe MDL2 Assets" FontSize="13" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="QUICK ACTIONS" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="#000000" BlurRadius="8" ShadowDepth="0" Opacity="0.35"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </StackPanel>
+                            <TextBlock Text="Instant navigation to dedicated optimization controllers" FontSize="9.5" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- 1. ONE-CLICK OPTIMIZE -->
+                            <Button Grid.Column="0" Style="{StaticResource PrimaryOptimizationButton}"
+                                    Command="{Binding QuickAction1ClickCommand}"
+                                    Height="44" Padding="0" ToolTip="Open One-Click Smart System Overhaul">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE945;" FontFamily="Segoe MDL2 Assets" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="1-CLICK" FontSize="9" FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 2. CLEAN TEMP -->
+                            <Button Grid.Column="2" Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding QuickActionCleanTempCommand}"
+                                    Height="44" Padding="0" ToolTip="Open Dedicated Storage &amp; Temp Cleaner">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="CLEAN TEMP" FontSize="9" FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 3. BOOST PERFORMANCE -->
+                            <Button Grid.Column="4" Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding QuickActionBoostPerformanceCommand}"
+                                    Height="44" Padding="0" ToolTip="Open Maximum Performance &amp; Hardware Tier">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE7FC;" FontFamily="Segoe MDL2 Assets" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="PERFORMANCE" FontSize="9" FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 4. RAM CLEANUP -->
+                            <Button Grid.Column="6" Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding QuickActionRamCleanupCommand}"
+                                    Height="44" Padding="0" ToolTip="Open AI RAM Limiter &amp; Working Set Optimizer">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE950;" FontFamily="Segoe MDL2 Assets" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="RAM CLEANUP" FontSize="9" FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 5. STARTUP MANAGER -->
+                            <Button Grid.Column="8" Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding QuickActionStartupManagerCommand}"
+                                    Height="44" Padding="0" ToolTip="Open Startup Applications Manager">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE7F4;" FontFamily="Segoe MDL2 Assets" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="STARTUP" FontSize="9" FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 6. NETWORK BOOST -->
+                            <Button Grid.Column="10" Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding QuickActionNetworkBoostCommand}"
+                                    Height="44" Padding="0" ToolTip="Open Network TCP &amp; Throttling Optimizer">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE839;" FontFamily="Segoe MDL2 Assets" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="NETWORK" FontSize="9" FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 7. AUTO OPTIMIZE NOW -->
+                            <Button Grid.Column="12" Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding QuickActionAutoOptimizeCommand}"
+                                    Height="44" Padding="0" ToolTip="Run Real Smart Auto Maintenance Now">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE7E8;" FontFamily="Segoe MDL2 Assets" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="AUTO OPT" FontSize="9" FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+                </controls:Card3D>
+
+                <!-- ======================================================== -->
+                <!-- ROW 7: OPTIMIZATION SUMMARY — 3D CARD                    -->
+                <!-- ======================================================== -->
+                <controls:Card3D Grid.Row="7" Depth="1" IsInteractive="True" IsSpotlightEnabled="True"
+                                 Padding="22,18" CornerRadius="14">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Border Width="28" Height="28" CornerRadius="6" Margin="0,0,10,0" VerticalAlignment="Center">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="{DynamicResource AccentColor}" Offset="0"/>
+                                            <GradientStop Color="Transparent" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <TextBlock Text="&#xE9F9;" FontFamily="Segoe MDL2 Assets" FontSize="13" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="OPTIMIZATION SUMMARY" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="#000000" BlurRadius="8" ShadowDepth="0" Opacity="0.35"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </StackPanel>
+                            <Border Grid.Column="2" CornerRadius="4" Padding="8,2.5" BorderThickness="1" VerticalAlignment="Center">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#2A3B82F6" Offset="0"/>
+                                        <GradientStop Color="#153B82F6" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Border.BorderBrush>
+                                    <SolidColorBrush Color="{DynamicResource AccentBrightColor}"/>
+                                </Border.BorderBrush>
+                                <TextBlock Text="{Binding OptimizationSummaryCountBadgeText}" FontSize="8.5" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                            </Border>
+                            <TextBlock Grid.Column="3" Text="{Binding OptimizationSummaryStatusText}" FontSize="9.5" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <!-- Summary Items -->
+                        <ItemsControl ItemsSource="{Binding OptimizationSummaryItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource SummaryItemRow}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="12"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="12"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="12"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Icon -->
+                                            <Border Grid.Column="0" Width="32" Height="32" CornerRadius="6" VerticalAlignment="Center">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                        <GradientStop Color="#253B82F6" Offset="0"/>
+                                                        <GradientStop Color="#103B82F6" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                                <Border.BorderBrush>
+                                                    <SolidColorBrush Color="{DynamicResource AccentBrightColor}"/>
+                                                </Border.BorderBrush>
+                                                <Border.BorderThickness>1</Border.BorderThickness>
+                                                <Border.Effect>
+                                                    <DropShadowEffect Color="#000000" BlurRadius="8" ShadowDepth="0" Opacity="0.4"/>
+                                                </Border.Effect>
+                                                <TextBlock Text="{Binding Icon}" FontFamily="Segoe MDL2 Assets" FontSize="13" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <!-- Title & Explanation -->
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="0,0,8,0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Title}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                                    <Border CornerRadius="3" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center"
+                                                            Background="#1AF59E0B" BorderBrush="#30F59E0B" BorderThickness="1">
+                                                        <TextBlock Text="{Binding Impact}" FontSize="7.5" FontWeight="Bold" Foreground="#F59E0B"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Explanation}" FontSize="9.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                            </StackPanel>
+
+                                            <!-- Current State -->
+                                            <Border Grid.Column="4" CornerRadius="5" Padding="9,4" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#20FFFFFF">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                        <GradientStop Color="#1E2233" Offset="0"/>
+                                                        <GradientStop Color="#10121C" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                                <TextBlock Text="{Binding CurrentState}" FontSize="8.5" FontWeight="SemiBold" Foreground="{StaticResource TextMutedBrush}"/>
+                                            </Border>
+
+                                            <!-- FIX / VIEW Button (Safe right clearance, natural sizing) -->
+                                            <Button Grid.Column="6" Style="{StaticResource PrimaryOptimizationButton}"
+                                                    Command="{Binding FixCommand}"
+                                                    Padding="14,6" VerticalAlignment="Center" Margin="0,0,2,0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding ActionText}" FontSize="9" FontWeight="Bold" VerticalAlignment="Center"/>
+                                                    <TextBlock Text=" &#xE76C;" FontFamily="Segoe MDL2 Assets" FontSize="8.5" Margin="4,0,0,0" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Button>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </controls:Card3D>
+
+                <!-- ======================================================== -->
+                <!-- ROW 9: LIVE MEMORY & STANDBY + LIVE STORAGE/POWER (2-COL) -->
+                <!-- ======================================================== -->
+                <Grid Grid.Row="9">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="14"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- LEFT: LIVE MEMORY & STANDBY PANEL — 3D CARD -->
+                    <controls:Card3D Grid.Column="0" Depth="1" IsInteractive="True" IsSpotlightEnabled="True"
+                                     Padding="22,18" CornerRadius="14">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>  <!-- Header -->
+                                <RowDefinition Height="Auto"/>  <!-- Telemetry Metrics Grid -->
+                                <RowDefinition Height="Auto"/>  <!-- Action Buttons -->
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,18">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="26" Height="26" CornerRadius="5" Margin="0,0,8,0" VerticalAlignment="Center">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#2A3B82F6" Offset="0"/>
+                                                <GradientStop Color="#153B82F6" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <TextBlock Text="&#xE7F4;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="LIVE MEMORY &amp; STANDBY" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center">
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect Color="#000000" BlurRadius="6" ShadowDepth="0" Opacity="0.3"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                </StackPanel>
+                                <Border HorizontalAlignment="Right" CornerRadius="4" Padding="7,2" BorderThickness="1">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="#1410B981"/>
+                                    </Border.Background>
+                                    <Border.BorderBrush>
+                                        <SolidColorBrush Color="#2510B981"/>
+                                    </Border.BorderBrush>
+                                    <TextBlock Text="KERNEL SYNC" FontSize="8" FontWeight="Bold" Foreground="{StaticResource SuccessBrush}"/>
+                                </Border>
+                            </Grid>
+
+                            <!-- Memory Breakdown Grid (6 Explicit Metrics) -->
+                            <Grid Grid.Row="1" Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Metric 1: USED RAM -->
+                                <Border Grid.Row="0" Grid.Column="0" CornerRadius="6" Padding="10,7" Margin="0,0,6,7" BorderThickness="1" BorderBrush="#14FFFFFF">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#18202E" Offset="0"/>
+                                            <GradientStop Color="#0D1018" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <StackPanel>
+                                        <TextBlock Text="USED RAM" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,2,0,0">
+                                            <Run Text="{Binding AutoOptRamUsageText, Mode=OneWay}"/><Run Text=" (" FontSize="7.5" Foreground="{StaticResource TextMutedBrush}"/><Run Text="{Binding AutoOptRamPercentText, Mode=OneWay}" FontSize="7.5" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/><Run Text=")" FontSize="7.5" Foreground="{StaticResource TextMutedBrush}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Metric 2: AVAILABLE -->
+                                <Border Grid.Row="0" Grid.Column="1" CornerRadius="6" Padding="10,7" Margin="0,0,6,7" BorderThickness="1" BorderBrush="#14FFFFFF">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#18202E" Offset="0"/>
+                                            <GradientStop Color="#0D1018" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <StackPanel>
+                                        <TextBlock Text="AVAILABLE" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock Text="{Binding AutoOptRamAvailableText, Mode=OneWay}" FontSize="13" FontWeight="Bold" Foreground="{StaticResource SuccessBrush}" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Metric 3: CACHED -->
+                                <Border Grid.Row="0" Grid.Column="2" CornerRadius="6" Padding="10,7" Margin="0,0,0,7" BorderThickness="1" BorderBrush="#14FFFFFF">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#18202E" Offset="0"/>
+                                            <GradientStop Color="#0D1018" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <StackPanel>
+                                        <TextBlock Text="CACHED" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock Text="{Binding AutoOptCachedText, Mode=OneWay}" FontSize="13" FontWeight="Bold" Foreground="#38BDF8" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Metric 4: STANDBY -->
+                                <Border Grid.Row="1" Grid.Column="0" CornerRadius="6" Padding="10,7" Margin="0,0,6,0" BorderThickness="1" BorderBrush="#14FFFFFF">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#18202E" Offset="0"/>
+                                            <GradientStop Color="#0D1018" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <StackPanel>
+                                        <TextBlock Text="STANDBY" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock Text="{Binding AutoOptStandbyText, Mode=OneWay}" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Metric 5: LOW-PRI STANDBY -->
+                                <Border Grid.Row="1" Grid.Column="1" CornerRadius="6" Padding="10,7" Margin="0,0,6,0" BorderThickness="1" BorderBrush="#14FFFFFF">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#18202E" Offset="0"/>
+                                            <GradientStop Color="#0D1018" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <StackPanel>
+                                        <TextBlock Text="LOW-PRI STANDBY" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock Text="{Binding AutoOptLowPriorityStandbyText, Mode=OneWay}" FontSize="13" FontWeight="Bold" Foreground="#A78BFA" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Metric 6: RECLAIMABLE -->
+                                <Border Grid.Row="1" Grid.Column="2" CornerRadius="6" Padding="10,7" Margin="0" BorderThickness="1" BorderBrush="#14FFFFFF">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#18202E" Offset="0"/>
+                                            <GradientStop Color="#0D1018" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <StackPanel>
+                                        <TextBlock Text="RECLAIMABLE" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock Text="{Binding AutoOptRamPotentialReclaimText, Mode=OneWay}" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            <!-- Memory Actions: TRIM SETS & EMPTY STANDBY -->
+                            <Grid Grid.Row="2" Margin="0,4,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0" Style="{StaticResource SecondaryButtonStyle}"
+                                        Command="{Binding ReclaimWorkingSetsCommand}"
+                                        MinHeight="32" Padding="8,5" ToolTip="Trims working sets of non-essential background processes">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="&#xE7F4;" FontFamily="Segoe MDL2 Assets" FontSize="10" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="TRIM SETS" FontSize="9.5" FontWeight="Bold" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Button Grid.Column="2" Style="{StaticResource PrimaryOptimizationButton}"
+                                        Command="{Binding EmptyStandbyListCommand}"
+                                        MinHeight="32" Padding="8,5" ToolTip="Purges unreferenced Standby memory cache pages (RAMMap-equivalent via EmptyStandbyList.exe)">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="10" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="EMPTY STANDBY" FontSize="9.5" FontWeight="Bold" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </controls:Card3D>
+
+                    <!-- RIGHT: LIVE STORAGE & LIVE POWER PANEL — 3D CARD -->
+                    <controls:Card3D Grid.Column="2" Depth="1" IsInteractive="True" IsSpotlightEnabled="True"
+                                     Padding="22,18" CornerRadius="14">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>  <!-- Storage Header -->
+                                <RowDefinition Height="Auto"/>  <!-- Physical Drives -->
+                                <RowDefinition Height="10"/>    <!-- Separator -->
+                                <RowDefinition Height="Auto"/>  <!-- Power Header & Info -->
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,10">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="26" Height="26" CornerRadius="5" Margin="0,0,8,0" VerticalAlignment="Center">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#2A3B82F6" Offset="0"/>
+                                                <GradientStop Color="#153B82F6" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <TextBlock Text="&#xEDA2;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="LIVE STORAGE" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center">
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect Color="#000000" BlurRadius="6" ShadowDepth="0" Opacity="0.3"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                </StackPanel>
+                                <TextBlock Text="{Binding StorageInfo}" FontSize="9" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <!-- Physical Drives List -->
+                            <ItemsControl Grid.Row="1" ItemsSource="{Binding Drives}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="6" Padding="11,7" Margin="0,0,0,5" BorderThickness="1" BorderBrush="#16FFFFFF">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                    <GradientStop Color="#181C28" Offset="0"/>
+                                                    <GradientStop Color="#0D0F1A" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <Border.Effect>
+                                                <DropShadowEffect Color="#000000" BlurRadius="5" ShadowDepth="1" Opacity="0.3"/>
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding Name}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,8,0">
+                                                    <ProgressBar Style="{StaticResource MetricBar}" Value="{Binding PercentUsed}" Maximum="100" Height="3"/>
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="2" FontSize="8.5" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center">
+                                                    <Run Text="{Binding FreeSize}" FontWeight="Bold" Foreground="{StaticResource SuccessBrush}"/><Run Text=" free of "/><Run Text="{Binding TotalSize}"/>
+                                                </TextBlock>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- LIVE POWER SECTION -->
+                            <Border Grid.Row="3" CornerRadius="8" Padding="12,10" Margin="0,4,0,0" BorderThickness="1">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#1A2040" Offset="0"/>
+                                        <GradientStop Color="#0D1020" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Border.BorderBrush>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="{DynamicResource AccentBrightColor}" Offset="0"/>
+                                        <GradientStop Color="{DynamicResource AccentDarkColor}" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.BorderBrush>
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#000000" BlurRadius="12" ShadowDepth="0" Opacity="0.25"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE7E8;" FontFamily="Segoe MDL2 Assets" FontSize="10" Foreground="{DynamicResource AccentBrush}" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="ACTIVE POWER PLAN" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding PowerPlan}" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" Margin="0,3,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding PowerHero}" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Right"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </controls:Card3D>
+                </Grid>
+
+                <!-- ======================================================== -->
+                <!-- ROW 11: FOOTER STATUS & AUTO-RUN SCHEDULER — 3D CARD     -->
+                <!-- ======================================================== -->
+                <controls:Card3D Grid.Row="11" Depth="1" IsInteractive="False" IsSpotlightEnabled="False"
+                                 Padding="22,18" CornerRadius="14">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="14"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="14"/>
+                            <ColumnDefinition Width="1.2*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- LAST OPTIMIZED -->
+                        <Border Grid.Column="0" Style="{StaticResource FooterTile3D}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+                                    <TextBlock Text="&#xE823;" FontFamily="Segoe MDL2 Assets" FontSize="10" Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="LAST OPTIMIZED" FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding LastOptimizedText}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Verified checkpoint" FontSize="8" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- NEXT RECOMMENDED -->
+                        <Border Grid.Column="2" Style="{StaticResource FooterTile3D}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+                                    <TextBlock Text="&#xE749;" FontFamily="Segoe MDL2 Assets" FontSize="10" Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="NEXT RECOMMENDED" FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding NextRecommendedText}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="Dynamic telemetry guidance" FontSize="8" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- AUTO-MAINTENANCE SCHEDULER -->
+                        <Border Grid.Column="4" Style="{StaticResource FooterTile3D}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+                                        <TextBlock Text="&#xE7E8;" FontFamily="Segoe MDL2 Assets" FontSize="10" Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="AUTO-RUN MAINTENANCE" FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding ScheduleNextRunText}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="Temp cleaner + Standby auto cycle" FontSize="8" Foreground="{StaticResource TextMutedBrush}" Margin="0,1,0,0"/>
+                                </StackPanel>
+
+                                <ComboBox Grid.Column="1"
+                                          ItemsSource="{Binding AutoOptimizeScheduleOptions}"
+                                          SelectedItem="{Binding SelectedScheduleOption, Mode=TwoWay}"
+                                          Width="108" Height="28" VerticalAlignment="Center"
+                                          FontSize="8.5" FontWeight="Bold"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </controls:Card3D>
+
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

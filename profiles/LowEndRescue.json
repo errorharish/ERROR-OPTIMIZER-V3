@@ -1,0 +1,76 @@
+{
+  "id": "LowEndRescue",
+  "displayName": "Low-End Rescue",
+  "description": "Maximum background reduction for low-RAM (8 GB or less) and HDD systems. Aggressively reduces non-essential services and telemetry to restore responsiveness on low-end hardware.",
+  "extends": ["Normal"],
+  "targetProcessReduction": {
+    "min": 40,
+    "max": 80
+  },
+  "entries": [
+    {
+      "id": "lowend.sysmain",
+      "displayName": "Disable SysMain (Low RAM pressure reduction)",
+      "category": "Service",
+      "action": "SetServiceStartup",
+      "target": "SysMain",
+      "value": "Disabled",
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "On low RAM, SysMain may cause swapping. Disabling can recover RAM.",
+      "conditions": [
+        { "type": "MaximumRamGb", "operator": "Equals", "value": 8 }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "lowend.wsearch",
+      "displayName": "Disable Windows Search Indexing (Low RAM)",
+      "category": "Service",
+      "action": "SetServiceStartup",
+      "target": "WSearch",
+      "value": "Disabled",
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "Frees RAM and reduces HDD I/O at the cost of instant search results.",
+      "conditions": [
+        { "type": "MaximumRamGb", "operator": "Equals", "value": 8 }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "lowend.visualfx",
+      "displayName": "Visual Effects — Best Performance",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects\\VisualFXSetting",
+      "value": 2,
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "Removes visual effects to reduce GPU and CPU overhead on low-end hardware.",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "lowend.priority",
+      "displayName": "Foreground Process Priority Boost",
+      "category": "Performance",
+      "action": "SetForegroundPriority",
+      "target": "Win32PrioritySeparation",
+      "value": 38,
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    }
+  ]
+}

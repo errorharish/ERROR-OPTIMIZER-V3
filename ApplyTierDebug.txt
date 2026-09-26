@@ -1,0 +1,10 @@
+{
+  "Success": 1,
+  "Failed": 0,
+  "Blocked": 0,
+  "NotAvailable": 4,
+  "AlreadyOptimized": 0,
+  "NotApplicable": 0,
+  "FailedReasons": [],
+  "BlockedReasons": []
+}

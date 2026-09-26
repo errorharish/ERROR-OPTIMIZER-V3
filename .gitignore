@@ -1,0 +1,74 @@
+# .NET SDK / local SDK
+.dotnet/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build output
+bin/
+obj/
+
+# Test results
+TestResults/
+*.trx
+
+# Logs
+*.log
+*.err
+
+# Temporary files
+scratch/
+temp/
+tmp/
+
+# Publish/build output
+publish/
+build/
+
+# NuGet
+packages/
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Build / publish output
+dist/
+publish/
+bin/
+obj/
+
+# .NET local SDK
+.dotnet/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build output
+bin/
+obj/
+dist/
+publish/
+
+# Test output
+TestResults/
+
+# Logs
+*.log
+*.err
+
+# Temporary
+scratch/
+temp/
+tmp/
+
+# NuGet
+packages/
+
+# OS
+Thumbs.db
+Desktop.ini

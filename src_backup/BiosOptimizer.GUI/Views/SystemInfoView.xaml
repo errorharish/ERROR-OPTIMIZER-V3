@@ -1,0 +1,111 @@
+<UserControl x:Class="BiosOptimizer.GUI.Views.SystemInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent" UseLayoutRounding="True" SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Style="{StaticResource SlimScrollViewer}">
+        <Grid Margin="28,24,24,24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="System Info" Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock Text="Detailed hardware and software diagnostics." 
+                               Style="{StaticResource PageSubtitleStyle}"/>
+                </StackPanel>
+                <Button Grid.Column="1" Style="{StaticResource SecondaryButtonStyle}"
+                        Content="↻ Refresh" Command="{Binding RefreshCommand}" VerticalAlignment="Center"/>
+            </Grid>
+
+            <!-- Status bar -->
+            <Border Grid.Row="2" Style="{StaticResource GlassCardStyle}" Padding="16,12">
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="8" Height="8" CornerRadius="4"
+                            Background="{StaticResource StatusGreenBrush}"
+                            VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="{Binding Status}"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Info Panel -->
+            <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Style="{StaticResource SlimScrollViewer}">
+                <StackPanel>
+                    <TextBlock Text="Diagnostics" Style="{StaticResource CardTitleStyle}" Margin="0,0,0,12"/>
+                    
+                    <UniformGrid Columns="2" Rows="5">
+                        <Border Style="{StaticResource GlassCardSmallStyle}" Margin="0,0,8,8">
+                            <StackPanel>
+                                <TextBlock Text="PROCESSOR" FontSize="10" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBlock Text="{Binding CpuName}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding CpuCores, StringFormat='{}Cores: {0}'}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource GlassCardSmallStyle}" Margin="8,0,0,8">
+                            <StackPanel>
+                                <TextBlock Text="MEMORY" FontSize="10" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBlock Text="{Binding Memory}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource GlassCardSmallStyle}" Margin="0,0,8,8">
+                            <StackPanel>
+                                <TextBlock Text="MOTHERBOARD" FontSize="10" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBlock Text="{Binding Motherboard}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource GlassCardSmallStyle}" Margin="8,0,0,8">
+                            <StackPanel>
+                                <TextBlock Text="GPU" FontSize="10" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBlock Text="{Binding GpuName}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Border Style="{StaticResource GlassCardSmallStyle}" Margin="0,0,8,8">
+                            <StackPanel>
+                                <TextBlock Text="BIOS" FontSize="10" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBlock Text="{Binding BiosInfo}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Border Style="{StaticResource GlassCardSmallStyle}" Margin="8,0,0,8">
+                            <StackPanel>
+                                <TextBlock Text="WINDOWS" FontSize="10" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBlock Text="{Binding WindowsInfo}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource GlassCardSmallStyle}" Margin="0,0,8,8">
+                            <StackPanel>
+                                <TextBlock Text="SECURITY" FontSize="10" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBlock Text="{Binding SecureBootStatus, StringFormat='{}Secure Boot: {0}'}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding TpmStatus, StringFormat='{}TPM: {0}'}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Border Style="{StaticResource GlassCardSmallStyle}" Margin="8,0,0,8">
+                            <StackPanel>
+                                <TextBlock Text="GRAPHICS ACCELERATION" FontSize="10" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBlock Text="{Binding HagsStatus, StringFormat='{}HAGS: {0}'}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
+

@@ -1,0 +1,118 @@
+<UserControl x:Class="BiosOptimizer.GUI.Views.ToolsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent" UseLayoutRounding="True" SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Style="{StaticResource SlimScrollViewer}">
+        <Grid Margin="28,24,24,24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0">
+                <StackPanel>
+                    <TextBlock Text="System Tools" Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock Text="Quick utility actions and diagnostics." 
+                               Style="{StaticResource PageSubtitleStyle}"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Status bar -->
+            <Border Grid.Row="2" Style="{StaticResource GlassCardStyle}" Padding="16,12">
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="8" Height="8" CornerRadius="4"
+                            Background="{StaticResource StatusGreenBrush}"
+                            VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="{Binding Status}"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Action Grid -->
+            <Border Grid.Row="4" Style="{StaticResource GlassCardStyle}" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Available Tools" Style="{StaticResource CardTitleStyle}"
+                               Margin="0,0,0,16"/>
+                    <UniformGrid Columns="2" Rows="2">
+                        <!-- RAM Clean -->
+                        <Button Style="{StaticResource QuickActionCardStyle}"
+                                Margin="0,0,8,8" Height="90"
+                                Command="{Binding RamCleanCommand}">
+                            <StackPanel Margin="14,12" HorizontalAlignment="Left">
+                                <TextBlock Text="🧹" FontSize="18" Margin="0,0,0,6"
+                                           Foreground="{StaticResource AccentBrush}"/>
+                                <TextBlock Text="RAM Cleanup" FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Free up system memory" FontSize="9"
+                                           Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <!-- Temp Clean -->
+                        <Button Style="{StaticResource QuickActionCardStyle}"
+                                Margin="8,0,0,8" Height="90"
+                                Command="{Binding TempCleanCommand}">
+                            <StackPanel Margin="14,12" HorizontalAlignment="Left">
+                                <TextBlock Text="🗑" FontSize="18" Margin="0,0,0,6"
+                                           Foreground="{StaticResource AccentBrush}"/>
+                                <TextBlock Text="Temp Cleanup" FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Delete junk files" FontSize="9"
+                                           Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <!-- Diagnostics -->
+                        <Button Style="{StaticResource QuickActionCardStyle}"
+                                Margin="0,8,8,0" Height="90"
+                                Command="{Binding DiagnosticsCommand}">
+                            <StackPanel Margin="14,12" HorizontalAlignment="Left">
+                                <TextBlock Text="🔍" FontSize="18" Margin="0,0,0,6"
+                                           Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Text="Hardware Diagnostics" FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Analyze system components" FontSize="9"
+                                           Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <!-- BIOS Info -->
+                        <Button Style="{StaticResource QuickActionCardStyle}"
+                                Margin="8,8,0,0" Height="90"
+                                Command="{Binding BiosInfoCommand}">
+                            <StackPanel Margin="14,12" HorizontalAlignment="Left">
+                                <TextBlock Text="🔧" FontSize="18" Margin="0,0,0,6"
+                                           Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Text="BIOS Provider Info" FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                                <TextBlock Text="WMI SMBIOS integration" FontSize="9"
+                                           Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Button>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+            <!-- Result Panel -->
+            <Border Grid.Row="6" Style="{StaticResource GlassCardStyle}" Padding="20"
+                    Visibility="{Binding HasResult}">
+                <StackPanel>
+                    <TextBlock Text="Output" Style="{StaticResource CardTitleStyle}"
+                               Margin="0,0,0,12"/>
+                    <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto"
+                                  Style="{StaticResource SlimScrollViewer}">
+                        <TextBlock Text="{Binding Result}"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="11" FontFamily="Cascadia Mono, Consolas"
+                                   TextWrapping="Wrap" LineHeight="18"/>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
+

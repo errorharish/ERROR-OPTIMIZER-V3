@@ -1,0 +1,63 @@
+<UserControl x:Class="BiosOptimizer.GUI.Views.AboutView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent" UseLayoutRounding="True" SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Style="{StaticResource SlimScrollViewer}">
+        <Grid Margin="28,24,24,24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0">
+                <StackPanel>
+                    <TextBlock Text="About" Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock Text="Product and version information." 
+                               Style="{StaticResource PageSubtitleStyle}"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Info Panel -->
+            <Border Grid.Row="2" Style="{StaticResource GlassCardStyle}" Padding="30">
+                <StackPanel HorizontalAlignment="Center">
+                    <Border Width="64" Height="64" CornerRadius="16" Background="#1A0A0A"
+                            BorderBrush="#331A1A" BorderThickness="1"
+                            HorizontalAlignment="Center" Margin="0,0,0,16">
+                        <!-- Error red accent -->
+                        <Border Width="12" Height="12" CornerRadius="6" Background="{StaticResource AccentBrush}"
+                                VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#E53935" BlurRadius="12" ShadowDepth="0"/>
+                            </Border.Effect>
+                        </Border>
+                    </Border>
+                    
+                    <TextBlock Text="ERROR OPTIMIZER" FontSize="16" FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}" 
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding Version, StringFormat=v{0}}" FontSize="12"
+                               Foreground="{StaticResource AccentBrush}"
+                               HorizontalAlignment="Center" Margin="0,4,0,0" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding BuildDate}" FontSize="10"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               HorizontalAlignment="Center" Margin="0,2,0,20"/>
+                    
+                    <Rectangle Width="200" Style="{StaticResource SidebarSeparatorStyle}" Margin="0,0,0,20"/>
+                    
+                    <TextBlock Text="{Binding Description}" FontSize="11" TextAlignment="Center"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               TextWrapping="Wrap" MaxWidth="400" LineHeight="18"/>
+                               
+                    <Rectangle Width="200" Style="{StaticResource SidebarSeparatorStyle}" Margin="0,20,0,20"/>
+                    
+                    <TextBlock Text="© 2026 Error Optimizer Team. All rights reserved." FontSize="9"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
+

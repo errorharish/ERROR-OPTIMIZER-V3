@@ -1,0 +1,18 @@
+{
+  "id": "TotalMax",
+  "displayName": "Total Max",
+  "description": "Global performance mode encompassing all performance tiers and active-workload rules.",
+  "targetProcessReduction": { "min": 20, "max": 45 },
+  "extends": [ "MaximumWorkloadPerformance" ],
+  "entries": [
+    {
+      "id": "total_max_disclaimer",
+      "displayName": "Global Performance Mode Active",
+      "category": "Status",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\Software\\BiosOptimizer\\Status",
+      "value": "TotalMax",
+      "risk": "Low"
+    }
+  ]
+}

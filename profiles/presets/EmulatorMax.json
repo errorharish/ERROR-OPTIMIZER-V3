@@ -1,0 +1,27 @@
+{
+  "id": "EmulatorMax",
+  "displayName": "Emulator Max",
+  "description": "Virtualization and memory optimization for BlueStacks and MSI App Player.",
+  "targetProcessReduction": { "min": 15, "max": 35 },
+  "extends": [ "Pro" ],
+  "entries": [
+    {
+      "id": "emu_priority",
+      "displayName": "Set Emulator Priority to High",
+      "category": "Workload",
+      "action": "SetProcessPriority",
+      "target": "HD-Player",
+      "value": "High",
+      "risk": "Medium"
+    },
+    {
+      "id": "emu_hags",
+      "displayName": "Enable HAGS (Hardware Accelerated GPU Scheduling)",
+      "category": "Performance",
+      "action": "SetHags",
+      "target": "HwSchMode",
+      "value": 2,
+      "risk": "Medium"
+    }
+  ]
+}

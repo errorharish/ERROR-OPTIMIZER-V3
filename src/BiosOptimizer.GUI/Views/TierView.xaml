@@ -1,0 +1,842 @@
+<UserControl x:Class="BiosOptimizer.GUI.Views.TierView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:controls="clr-namespace:BiosOptimizer.GUI.Controls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:BiosOptimizer.GUI.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="1600" d:DesignWidth="1000"
+             d:DataContext="{d:DesignInstance Type=vm:TierViewModel}">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+
+
+        <!-- Quick Filter Button Style -->
+        <Style x:Key="PillFilterButton" TargetType="Button">
+            <Setter Property="Background" Value="#11FFFFFF"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#1AFFFFFF"/>
+            <Setter Property="Padding" Value="12,5"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#22FFFFFF"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Category Tab Button Style -->
+        <Style x:Key="CategoryTabButton" TargetType="Button">
+            <Setter Property="Background" Value="#08FFFFFF"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#11FFFFFF"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontSize" Value="9"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#18FFFFFF"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Premium Modern Action Button -->
+
+    </UserControl.Resources>
+
+    <Grid Background="Transparent">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Grid Margin="24,18,24,32">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>  <!-- 0: Hero Header -->
+                    <RowDefinition Height="Auto"/>  <!-- 1: Dynamic Pro Tip Banner -->
+                    <RowDefinition Height="Auto"/>  <!-- 2: System Analysis Strip -->
+                    <RowDefinition Height="Auto"/>  <!-- 3: Capability Summary / BIOS Capability (Advanced) -->
+                    <RowDefinition Height="Auto"/>  <!-- 4: Adaptive Optimization Analysis Banner -->
+                    <RowDefinition Height="14"/>
+                    <RowDefinition Height="Auto"/>  <!-- 6: Top Adaptive Recommendations (Simple + Advanced) -->
+                    <RowDefinition Height="14"/>
+                    <RowDefinition Height="Auto"/>  <!-- 8: Debloat Toolbox (When IsDebloat & IsAdvancedView) -->
+                    <RowDefinition Height="14"/>
+                    <RowDefinition Height="Auto"/>  <!-- 10: Detailed Interactive Preview (When IsAdvancedView) -->
+                    <RowDefinition Height="14"/>
+                    <RowDefinition Height="Auto"/>  <!-- 12: Manual BIOS Section (When IsBiosSafe & IsAdvancedView) -->
+                    <RowDefinition Height="14"/>
+                    <RowDefinition Height="Auto"/>  <!-- 14: 3D Glowing Progress Control -->
+                    <RowDefinition Height="16"/>
+                    <RowDefinition Height="Auto"/>  <!-- 16: Primary Action & Controls Bar -->
+                    <RowDefinition Height="14"/>
+                    <RowDefinition Height="Auto"/>  <!-- 18: Advanced Logs & Diagnostics (When IsAdvancedView) -->
+                    <RowDefinition Height="Auto"/>  <!-- 19: Results Summary Card -->
+                </Grid.RowDefinitions>
+
+                <!-- ======================================================== -->
+                <!-- ROW 0: HERO HEADER (Responsive Layout)                   -->
+                <!-- ======================================================== -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="8"
+                            Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBorderSubtleBrush}" BorderThickness="1"
+                            Margin="0,0,14,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding ProfileIcon}" FontFamily="Segoe MDL2 Assets" FontSize="18"
+                                   Foreground="{DynamicResource AccentBrush}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                            <TextBlock Text="{Binding TierName}" FontSize="18" FontWeight="Bold"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding Description}" FontSize="11"
+                                   Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <!-- Top Action Controls: [ CURRENT VIEW INDICATOR ], [ REFRESH ], [ SCAN SYSTEM ], [ VIEW MODE TOGGLE ], [ RESTORE BACKUP ] -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Mode Indicator -->
+                        <Border Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBorderSubtleBrush}" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,8,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding CurrentViewModeText}" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                        </Border>
+                        
+                        <Button Content="REFRESH" Style="{StaticResource PillFilterButton}"
+                                Command="{Binding ScanCommand}" Padding="12,6" Margin="0,0,6,0"
+                                Foreground="{StaticResource TextPrimaryBrush}"/>
+                        <Button Content="SCAN SYSTEM" Style="{StaticResource PillFilterButton}"
+                                Command="{Binding ScanCommand}" Padding="12,6" Margin="0,0,6,0"/>
+                        <Button Content="{Binding ViewModeToggleText}" Style="{StaticResource PillFilterButton}"
+                                Command="{Binding ToggleViewModeCommand}" Padding="12,6" Margin="0,0,6,0"
+                                Foreground="{StaticResource TextPrimaryBrush}" BorderBrush="#33FFFFFF"/>
+                        <Button Content="RESTORE BACKUP" Style="{StaticResource PillFilterButton}"
+                                Command="{Binding RestoreLastSessionCommand}" Padding="12,6"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- ======================================================== -->
+                <!-- ROW 1: DYNAMIC PRO TIP BANNER                           -->
+                <!-- ======================================================== -->
+                <Border Grid.Row="1" Background="#08FFFFFF" BorderBrush="#14FFFFFF" BorderThickness="1" CornerRadius="6" Padding="12,7" Margin="0,10,0,10">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBorderSubtleBrush}" BorderThickness="1" CornerRadius="3" Padding="6,2" Margin="0,0,10,0" VerticalAlignment="Center">
+                            <TextBlock Text="PRO TIP" FontSize="8" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                        </Border>
+                        <TextBlock Text="{Binding ProTipText}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- ======================================================== -->
+                <!-- ROW 2: UNIFIED 3-CARD PROFILE OVERVIEW & STATUS AREA    -->
+                <!-- ======================================================== -->
+                <Grid Grid.Row="2" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.1*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="1.35*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="0.95*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- CARD 1: SYSTEM & PROFILE INFORMATION -->
+                    <Border Grid.Column="0" Style="{StaticResource GlassCardStyle}" Padding="16,14" MinHeight="148">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,8">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" FontSize="11.5"
+                                               Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="SYSTEM SPECIFICATION" FontSize="10.5" FontWeight="Bold"
+                                               Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <Border HorizontalAlignment="Right" CornerRadius="4" Padding="6,2" Background="#1410B981">
+                                    <TextBlock Text="{Binding SystemCondition, FallbackValue='SYSTEM GOOD'}" FontSize="8" FontWeight="Bold" Foreground="{Binding SystemConditionBrush}"/>
+                                </Border>
+                            </Grid>
+
+                            <Grid Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,4,4">
+                                    <TextBlock Text="PROCESSOR" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <TextBlock Text="{Binding CpuSummary}" FontSize="9.5" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" Margin="0,1,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="0" Grid.Column="1" Margin="4,0,0,4">
+                                    <TextBlock Text="GRAPHICS" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <TextBlock Text="{Binding GpuSummary}" FontSize="9.5" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" Margin="0,1,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,4,4,0">
+                                    <TextBlock Text="MEMORY" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <TextBlock Text="{Binding RamSummary}" FontSize="9.5" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" Margin="0,1,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="1" Grid.Column="1" Margin="4,4,0,0">
+                                    <TextBlock Text="OPERATING SYSTEM" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <TextBlock Text="{Binding OsSummary}" FontSize="9.5" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" Margin="0,1,0,0"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <!-- CARD 2: OPTIMIZATION STATUS -->
+                    <Border Grid.Column="2" Style="{StaticResource GlassCardStyle}" Padding="16,14" MinHeight="148">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,8">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="&#xE945;" FontFamily="Segoe MDL2 Assets" FontSize="11.5"
+                                               Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="OPTIMIZATION STATUS" FontSize="10.5" FontWeight="Bold"
+                                               Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding AnalysisStatusText}" FontSize="8.5" FontWeight="Bold"
+                                           Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <Grid Grid.Row="1" VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="1.1*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="TOTAL" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <TextBlock Text="{Binding TotalPossibleAnalyzed}" FontSize="15" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,2,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="APPLICABLE" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <TextBlock Text="{Binding SummaryApplicable}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" Margin="0,2,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="HIGHLY REC." FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <TextBlock Text="{Binding SummaryHighlyRecommended}" FontSize="15" FontWeight="Bold" Foreground="#10B981" Margin="0,2,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="3">
+                                    <TextBlock Text="OPTIMIZED" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <TextBlock Text="{Binding SummaryAlreadyOptimized}" FontSize="15" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="PENDING" FontSize="7.5" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <TextBlock Text="{Binding SummaryAutomaticPending}" FontSize="15" FontWeight="Bold" Foreground="#F59E0B" Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <!-- CARD 3: RISK & SAFETY (Dedicated 3rd Summary Card - Fixed Semantic Colors) -->
+                    <Border Grid.Column="4" Style="{StaticResource GlassCardStyle}" Padding="16,14" MinHeight="148">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,6">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="11.5"
+                                               Foreground="{Binding RiskSemanticBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="RISK &amp; SAFETY" FontSize="10.5" FontWeight="Bold"
+                                               Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Risk Classification Badge -->
+                            <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,0,0,6">
+                                <Border HorizontalAlignment="Left" CornerRadius="5" Padding="10,4"
+                                        Background="{Binding RiskSemanticSoftBg}"
+                                        BorderBrush="{Binding RiskSemanticBorderBrush}"
+                                        BorderThickness="1.2">
+                                    <Border.Effect>
+                                        <DropShadowEffect Color="{Binding RiskGlowColor}" BlurRadius="10" ShadowDepth="0" Opacity="0.45"/>
+                                    </Border.Effect>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding RiskIcon}" FontFamily="Segoe MDL2 Assets" FontSize="11"
+                                                   Foreground="{Binding RiskSemanticBrush}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                        <TextBlock Text="{Binding RiskClassificationText}" FontSize="10.5" FontWeight="Bold"
+                                                   Foreground="{Binding RiskSemanticBrush}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <TextBlock Text="{Binding RiskDescription}" FontSize="9"
+                                           Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="0,5,0,0" LineHeight="12"/>
+                            </StackPanel>
+
+                            <!-- Breakdown Pills (Fixed Semantic Colors) -->
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- SAFE PILL -->
+                                <Border Grid.Column="0" Background="#1410B981" BorderBrush="#3310B981" BorderThickness="1" CornerRadius="4" Padding="4,2" Margin="0,0,3,0">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <TextBlock Text="SAFE" FontSize="7" FontWeight="Bold" Foreground="#10B981" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="{Binding SafeActionCount}" FontSize="11" FontWeight="Bold" Foreground="#10B981" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- MEDIUM PILL -->
+                                <Border Grid.Column="1" Background="#14F59E0B" BorderBrush="#33F59E0B" BorderThickness="1" CornerRadius="4" Padding="4,2" Margin="0,0,3,0">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <TextBlock Text="MEDIUM" FontSize="7" FontWeight="Bold" Foreground="#F59E0B" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="{Binding MediumRiskActionCount}" FontSize="11" FontWeight="Bold" Foreground="#F59E0B" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- HIGH PILL -->
+                                <Border Grid.Column="2" Background="#14EF4444" BorderBrush="#33EF4444" BorderThickness="1" CornerRadius="4" Padding="4,2">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <TextBlock Text="HIGH" FontSize="7" FontWeight="Bold" Foreground="#EF4444" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="{Binding HighRiskActionCount}" FontSize="11" FontWeight="Bold" Foreground="#EF4444" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- ======================================================== -->
+                <!-- ROW 6: TOP ADAPTIVE RECOMMENDATIONS                      -->
+                <!-- ======================================================== -->
+                <StackPanel Grid.Row="6">
+                    <TextBlock Text="TOP RECOMMENDATIONS" FontSize="11" FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,8"/>
+
+                    <ItemsControl ItemsSource="{Binding TopRecommendations}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource GlassCardStyle}" Padding="14,10" Margin="0,0,0,6">
+                                    <StackPanel>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" IsEnabled="{Binding IsWindowsAutomatic}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                                                    <TextBlock Text="{Binding Title}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" TextWrapping="Wrap" Margin="0,0,6,0"/>
+                                                    <Border CornerRadius="3" Padding="5,1" Background="#143B82F6" Margin="0,0,4,0">
+                                                        <TextBlock Text="{Binding ApplicabilityBadgeText}" FontSize="8" FontWeight="Bold" Foreground="{Binding ApplicabilityBadgeBrush}"/>
+                                                    </Border>
+                                                    <Border CornerRadius="3" Padding="5,1" Background="#148B5CF6" Margin="0,0,4,0">
+                                                        <TextBlock Text="{Binding ExecutionBadgeText}" FontSize="8" FontWeight="Bold" Foreground="{Binding ExecutionBadgeBrush}"/>
+                                                    </Border>
+                                                    <Border CornerRadius="3" Padding="5,1" Background="{DynamicResource AccentSoftBrush}">
+                                                        <TextBlock Text="{Binding Risk}" FontSize="8" FontWeight="Bold" Foreground="{Binding RiskBrush}"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Why}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal">
+                                                <StackPanel VerticalAlignment="Center" Margin="0,0,10,0">
+                                                    <TextBlock Text="{Binding Method}" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Right"/>
+                                                    <TextBlock Text="{Binding TargetState}" FontSize="9" FontWeight="Bold" Foreground="#10B981" Margin="0,1,0,0" HorizontalAlignment="Right"/>
+                                                </StackPanel>
+                                                <Button Content="DETAILS" Style="{StaticResource PillFilterButton}" Command="{Binding ToggleExpandCommand}" Padding="8,4"/>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <!-- Expanded Details Container -->
+                                        <Border Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVis}}"
+                                                Background="#08FFFFFF" CornerRadius="4" Padding="10,6" Margin="0,8,0,0" BorderBrush="#11FFFFFF" BorderThickness="1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                                                    <TextBlock Text="CURRENT VALUE:" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                                    <TextBlock Text="{Binding CurrentState}" FontSize="9" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="1" Margin="0,0,6,0">
+                                                    <TextBlock Text="SAFETY BACKUP:" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                                    <TextBlock Text="{Binding BackupRequirement}" FontSize="9" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="2">
+                                                    <TextBlock Text="RESTART REQUIRED:" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                                    <TextBlock Text="{Binding RestartRequirement}" FontSize="9" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!-- ======================================================== -->
+                <!-- ROW 8: DEBLOAT TOOLBOX (When IsDebloat & IsAdvancedView) -->
+                <!-- ======================================================== -->
+                <Border Grid.Row="8" Padding="16,14">
+                    <Border.Style>
+                        <Style TargetType="Border" BasedOn="{StaticResource GlassCardStyle}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsDebloat}" Value="True"/>
+                                        <Condition Binding="{Binding IsAdvancedView}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel>
+                        <Grid Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="13"
+                                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="DEBLOAT TOOLBOX" FontSize="11" FontWeight="Bold"
+                                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <!-- Category Selector Tabs -->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Content="BLOATWARE" Style="{StaticResource CategoryTabButton}" Command="{Binding SelectToolboxCategoryCommand}" CommandParameter="BLOATWARE" Margin="0,0,3,0"/>
+                                <Button Content="FEATURES" Style="{StaticResource CategoryTabButton}" Command="{Binding SelectToolboxCategoryCommand}" CommandParameter="WINDOWS FEATURES" Margin="0,0,3,0"/>
+                                <Button Content="PRIVACY" Style="{StaticResource CategoryTabButton}" Command="{Binding SelectToolboxCategoryCommand}" CommandParameter="PRIVACY" Margin="0,0,3,0"/>
+                                <Button Content="REGISTRY" Style="{StaticResource CategoryTabButton}" Command="{Binding SelectToolboxCategoryCommand}" CommandParameter="REGISTRY" Margin="0,0,3,0"/>
+                                <Button Content="WINDOWS UI" Style="{StaticResource CategoryTabButton}" Command="{Binding SelectToolboxCategoryCommand}" CommandParameter="WINDOWS UI" Margin="0,0,3,0"/>
+                                <Button Content="ADVANCED" Style="{StaticResource CategoryTabButton}" Command="{Binding SelectToolboxCategoryCommand}" CommandParameter="ADVANCED"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Toolbox Items Grid -->
+                        <ItemsControl ItemsSource="{Binding FilteredDebloatTools}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#08FFFFFF" CornerRadius="6" Padding="14,10" Margin="0,0,0,6" BorderBrush="#0AFFFFFF" BorderThickness="1">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Border Grid.Column="0" Width="30" Height="30" CornerRadius="4" Background="#11FFFFFF" Margin="0,0,12,0" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Icon}" FontFamily="Segoe MDL2 Assets" FontSize="13" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                                                    <TextBlock Text="{Binding Title}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" TextWrapping="Wrap" Margin="0,0,6,0"/>
+                                                    <Border CornerRadius="3" Padding="5,1" Background="{DynamicResource AccentSoftBrush}">
+                                                        <TextBlock Text="{Binding Risk}" FontSize="8" FontWeight="Bold" Foreground="{Binding RiskBrush}"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Description}" FontSize="9" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="14,0" HorizontalAlignment="Right">
+                                                <TextBlock Text="CURRENT:" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                                <TextBlock Text="{Binding CurrentState}" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+
+                                            <Button Grid.Column="3" Content="{Binding ActionLabel}" Style="{StaticResource PillFilterButton}"
+                                                    Command="{Binding ExecuteCommand}" VerticalAlignment="Center" Padding="12,5"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- ======================================================== -->
+                <!-- ROW 10: WHAT WILL CHANGE (When IsAdvancedView)           -->
+                <!-- ======================================================== -->
+                <Border Grid.Row="10" Padding="16,14">
+                    <Border.Style>
+                        <Style TargetType="Border" BasedOn="{StaticResource GlassCardStyle}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsAdvancedView}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel>
+                        <Grid Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE8B9;" FontFamily="Segoe MDL2 Assets" FontSize="12"
+                                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="WHAT WILL CHANGE (OPTIMIZATION PREVIEW)" FontSize="11" FontWeight="Bold"
+                                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Content="SAVE CUSTOM PROFILE" Style="{StaticResource PillFilterButton}" Command="{Binding SaveCustomProfileCommand}" Margin="0,0,6,0" Foreground="{DynamicResource AccentBrush}" BorderBrush="{DynamicResource AccentBrush}"/>
+                                <Button Content="ALL" Style="{StaticResource PillFilterButton}" Command="{Binding SetLayerFilterCommand}" CommandParameter="ALL" Margin="0,0,3,0"/>
+                                <Button Content="WINDOWS" Style="{StaticResource PillFilterButton}" Command="{Binding SetLayerFilterCommand}" CommandParameter="WINDOWS" Margin="0,0,3,0"/>
+                                <Button Content="UEFI" Style="{StaticResource PillFilterButton}" Command="{Binding SetLayerFilterCommand}" CommandParameter="UEFI" Margin="0,0,6,0"/>
+                                <Button Content="SELECT ALL" Style="{StaticResource PillFilterButton}" Command="{Binding SelectAllCommand}" Margin="0,0,3,0"/>
+                                <Button Content="SAFE ONLY" Style="{StaticResource PillFilterButton}" Command="{Binding SelectSafeOnlyCommand}" Margin="0,0,3,0"/>
+                                <Button Content="DESELECT" Style="{StaticResource PillFilterButton}" Command="{Binding DeselectAllCommand}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding FilteredActionCards}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#0AFFFFFF" BorderThickness="0,0,0,1" Padding="0,8">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" IsEnabled="{Binding DataContext.IsCustomMode, RelativeSource={RelativeSource AncestorType=UserControl}}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                                                    <TextBlock Text="{Binding Title}" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" TextWrapping="Wrap" Margin="0,0,6,0"/>
+                                                    <Border CornerRadius="3" Padding="5,1" Background="#143B82F6" Margin="0,0,4,0">
+                                                        <TextBlock Text="{Binding ApplicabilityBadgeText}" FontSize="8" FontWeight="Bold" Foreground="{Binding ApplicabilityBadgeBrush}"/>
+                                                    </Border>
+                                                    <Border CornerRadius="3" Padding="5,1" Background="#148B5CF6" Margin="0,0,4,0">
+                                                        <TextBlock Text="{Binding Layer}" FontSize="8" FontWeight="Bold" Foreground="{Binding LayerBrush}"/>
+                                                    </Border>
+                                                    <Border CornerRadius="3" Padding="5,1" Background="{DynamicResource AccentSoftBrush}">
+                                                        <TextBlock Text="{Binding Risk}" FontSize="8" FontWeight="Bold" Foreground="{Binding RiskBrush}"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Description}" FontSize="9" Foreground="{StaticResource TextMutedBrush}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="12,0" HorizontalAlignment="Right">
+                                                <TextBlock Text="CURRENT:" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                                <TextBlock Text="{Binding CurrentState}" FontSize="9" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                <TextBlock Text="TARGET:" FontSize="8" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                                <TextBlock Text="{Binding TargetState}" FontSize="9" FontWeight="Bold" Foreground="#10B981" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- ======================================================== -->
+                <!-- ROW 12: MANUAL BIOS (When IsBiosSafe & IsAdvancedView)   -->
+                <!-- ======================================================== -->
+                <Border Grid.Row="12" Padding="16,14">
+                    <Border.Style>
+                        <Style TargetType="Border" BasedOn="{StaticResource GlassCardStyle}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsBiosSafe}" Value="True"/>
+                                        <Condition Binding="{Binding IsAdvancedView}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel>
+                        <Grid Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE950;" FontFamily="Segoe MDL2 Assets" FontSize="12"
+                                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="MANUAL UEFI / FIRMWARE OPTIMIZATIONS" FontSize="11" FontWeight="Bold"
+                                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <Button Content="REBOOT TO UEFI FIRMWARE" Style="{StaticResource PillFilterButton}"
+                                    Command="{Binding RebootToUefiCommand}" HorizontalAlignment="Right"
+                                    Foreground="#F59E0B" BorderBrush="#33F59E0B" Background="#14F59E0B"/>
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding ManualBiosActions}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#08FFFFFF" CornerRadius="6" Padding="12,8" Margin="0,0,0,6">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                                                    <TextBlock Text="{Binding SettingName}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" TextWrapping="Wrap" Margin="0,0,6,0"/>
+                                                    <Border CornerRadius="3" Padding="5,1" Background="#14F59E0B" Margin="0,0,4,0">
+                                                        <TextBlock Text="{Binding Method}" FontSize="8" FontWeight="Bold" Foreground="#F59E0B"/>
+                                                    </Border>
+                                                    <Border CornerRadius="3" Padding="5,1" Background="#1410B981">
+                                                        <TextBlock Text="{Binding Risk}" FontSize="8" FontWeight="Bold" Foreground="{Binding RiskBrush}"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Why}" FontSize="9" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                                                <TextBlock Text="{Binding Instructions}" FontSize="9" Foreground="#60FFFFFF" TextWrapping="Wrap" Margin="0,3,0,0"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding RecommendedState}" FontSize="9" FontWeight="Bold" Foreground="#10B981" HorizontalAlignment="Right"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- ======================================================== -->
+                <!-- ROW 16: PRIMARY ACTION & CONTROLS BAR                    -->
+                <!-- ======================================================== -->
+                <Border Grid.Row="16" Style="{StaticResource GlassCardStyle}" Padding="16,12" Margin="0,0,0,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,12,0">
+                            <TextBlock Text="{Binding StatusMessage}" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" TextWrapping="Wrap"/>
+                            <TextBlock Text="Automatic rollback snapshot created before changes are applied." FontSize="9" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="1" Content="{Binding RunButtonText}"
+                                Style="{StaticResource PrimaryOptimizationButton}"
+                                Command="{Binding ApplyCommand}"/>
+                    </Grid>
+                </Border>
+
+                <!-- ======================================================== -->
+                <!-- ROW 18: ADVANCED LOGS (When IsAdvancedView)              -->
+                <!-- ======================================================== -->
+                <Border Grid.Row="18" Padding="16,12" Margin="0,0,0,12">
+                    <Border.Style>
+                        <Style TargetType="Border" BasedOn="{StaticResource GlassCardStyle}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsAdvancedView}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel>
+                        <Grid Margin="0,0,0,8">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE756;" FontFamily="Segoe MDL2 Assets" FontSize="12"
+                                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="ADVANCED LOGS &amp; DIAGNOSTICS" FontSize="11" FontWeight="Bold"
+                                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Content="COPY LOGS" Style="{StaticResource PillFilterButton}" Command="{Binding CopyLogsCommand}" Margin="0,0,4,0"/>
+                                <Button Content="CLEAR" Style="{StaticResource PillFilterButton}" Command="{Binding ClearLogsCommand}" Margin="0,0,4,0"/>
+                                <Button Content="EXPAND / COLLAPSE" Style="{StaticResource PillFilterButton}" Command="{Binding ToggleLogsCommand}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Visibility="{Binding ShowLogs, Converter={StaticResource BoolToVis}}"
+                                Background="#05000000" CornerRadius="4" Padding="10" MaxHeight="200">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding LiveLogs}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Message}" Foreground="{Binding Color}" FontSize="9" FontFamily="Consolas" TextWrapping="Wrap" Margin="0,1"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                
+            </Grid>
+        </ScrollViewer>
+
+        <!-- ============================================================ -->
+        <!-- CUSTOMIZE BLOCKLIST MANAGER MODAL OVERLAY                   -->
+        <!-- ============================================================ -->
+        <Grid Background="#CC000000" Visibility="{Binding ShowBlocklistManagerModal, Converter={StaticResource BoolToVis}, FallbackValue=Collapsed}">
+            <Border Width="700" Height="540" Style="{StaticResource GlassCardStyle}" Background="#161618" BorderBrush="#33FFFFFF" Padding="20" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <StackPanel Orientation="Horizontal">
+                            <controls:NavigationIcon Icon="Pro" IsActive="True" Size="24" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="CUSTOMIZE BLOATWARE BLOCKLIST" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Button Content="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="11" Style="{StaticResource PillFilterButton}" Command="{Binding CloseBlocklistManagerCommand}" HorizontalAlignment="Right" Padding="6,3"/>
+                    </Grid>
+
+                    <Grid Grid.Row="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Text="{Binding BlocklistSearchQuery, UpdateSourceTrigger=PropertyChanged}" Background="#11FFFFFF" Foreground="White" BorderBrush="#22FFFFFF" Padding="8,5" FontSize="10" Margin="0,0,8,0"/>
+                        <Button Grid.Column="1" Content="RESET DEFAULTS" Style="{StaticResource PillFilterButton}" Command="{Binding ResetBlocklistCommand}"/>
+                    </Grid>
+
+                    <Border Grid.Row="2" Background="#0AFFFFFF" CornerRadius="6" Padding="6" Margin="0,0,0,12">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding FilteredBlocklistPackages}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#08FFFFFF" CornerRadius="4" Padding="8,6" Margin="0,0,0,4">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <CheckBox Grid.Column="0" IsChecked="{Binding IsBlocked}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding DisplayName}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" TextWrapping="Wrap" Margin="0,0,6,0"/>
+                                                        <Border CornerRadius="3" Padding="4,1" Background="{DynamicResource AccentSoftBrush}">
+                                                            <TextBlock Text="{Binding Risk}" FontSize="7" FontWeight="Bold" Foreground="{Binding RiskBrush}"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding FullName}" FontSize="8" Foreground="{StaticResource TextMutedBrush}" TextWrapping="Wrap" Margin="0,1,0,0"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                    <TextBlock Text="{Binding Category}" FontSize="8" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Right"/>
+                                                    <TextBlock Text="{Binding SizeInfo}" FontSize="7" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Right"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Border>
+
+                    <Grid Grid.Row="3">
+                        <TextBlock Text="Selected packages will be processed during Custom Bloatware Removal." FontSize="9" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="CANCEL" Style="{StaticResource PillFilterButton}" Command="{Binding CloseBlocklistManagerCommand}" Margin="0,0,6,0"/>
+                            <Button Content="SAVE BLOCKLIST" Style="{StaticResource PrimaryOptimizationButton}" Command="{Binding SaveBlocklistCommand}" Height="30" Padding="14,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- ============================================================ -->
+        <!-- UNIVERSAL REAL-TIME OPTIMIZATION PROGRESS MODAL              -->
+        
+    </Grid>
+</UserControl>

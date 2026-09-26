@@ -1,0 +1,373 @@
+{
+  "id": "MaximumPerformance",
+  "displayName": "Max Performance",
+  "description": "Complete machine-specific performance optimization. Combines Ultimate + CPU performance + GPU scheduling + power policy + memory + storage + visual effects. System Restore point created before execution. AC power strongly recommended.",
+  "extends": ["Ultimate"],
+  "targetProcessReduction": {
+    "min": 100,
+    "max": 170
+  },
+  "entries": [
+    {
+      "id": "maxperf.power.ultimateplan",
+      "displayName": "Ultimate Performance Power Plan",
+      "category": "Performance",
+      "action": "SetPowerPlan",
+      "target": "e9a42b02-d5df-448d-aa00-03f14749eb61",
+      "value": "e9a42b02-d5df-448d-aa00-03f14749eb61",
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "Applies Ultimate Performance power plan. Best on AC power.",
+      "conditions": [
+        { "type": "IsOnAc", "operator": "Equals", "value": true }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.gpu.hags",
+      "displayName": "Hardware Accelerated GPU Scheduling (HAGS)",
+      "category": "Performance",
+      "action": "SetHags",
+      "target": "HwSchMode",
+      "value": 2,
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "Requires DirectX 12 Ultimate capable GPU and WDDM 2.7+ driver.",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.cpu.foreground",
+      "displayName": "Foreground Application CPU Priority",
+      "category": "Performance",
+      "action": "SetForegroundPriority",
+      "target": "Win32PrioritySeparation",
+      "value": 38,
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "Biases CPU quanta toward active foreground window.",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.registry.cpuparking",
+      "displayName": "Disable CPU Core Parking (AC)",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\54533251-82be-4824-96c1-47b60b740d00\\0cc5b647-c1df-4637-891a-dec35c318583\\DefaultPowerSchemeValues\\e9a42b02-d5df-448d-aa00-03f14749eb61\\ValueMax",
+      "value": 100,
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "Keeps all CPU cores active. Best on AC power.",
+      "conditions": [
+        { "type": "IsOnAc", "operator": "Equals", "value": true }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.registry.cpumaxstate",
+      "displayName": "Set Processor Maximum State to 100%",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\54533251-82be-4824-96c1-47b60b740d00\\bc5038f7-23e0-4960-96da-33abaf5935ec\\DefaultPowerSchemeValues\\e9a42b02-d5df-448d-aa00-03f14749eb61\\ValueMax",
+      "value": 100,
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.power.usbsuspend",
+      "displayName": "Disable USB Selective Suspend (AC)",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\2a737441-1930-4402-8d77-b2bebba308a3\\48e6b7a6-50f5-4782-a5d4-53bb8f07e226\\DefaultPowerSchemeValues\\e9a42b02-d5df-448d-aa00-03f14749eb61\\ValueACSettingIndex",
+      "value": 0,
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "Prevents USB devices from entering suspend mode on AC.",
+      "conditions": [
+        { "type": "IsOnAc", "operator": "Equals", "value": true }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.power.pciepm",
+      "displayName": "Disable PCIe Active Power Management (AC)",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\501a4d13-42af-4429-9fd1-a8218c268e20\\ee12f906-d277-404b-b6da-e5fa1a576df5\\DefaultPowerSchemeValues\\e9a42b02-d5df-448d-aa00-03f14749eb61\\ValueACSettingIndex",
+      "value": 0,
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "Keeps PCIe links at full power. Increases power consumption slightly.",
+      "conditions": [
+        { "type": "IsOnAc", "operator": "Equals", "value": true }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.power.sleep",
+      "displayName": "Disable Sleep on AC",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\238c9fa8-0aad-41ed-83f4-97be242c8f20\\29f6c1db-86da-48c5-9fdb-f2b67b1f44da\\DefaultPowerSchemeValues\\e9a42b02-d5df-448d-aa00-03f14749eb61\\ValueACSettingIndex",
+      "value": 0,
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "Prevents system from sleeping on AC power.",
+      "conditions": [
+        { "type": "IsOnAc", "operator": "Equals", "value": true },
+        { "type": "IsDesktop", "operator": "Equals", "value": true }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.memory.memorycompression",
+      "displayName": "Disable Memory Compression (16+ GB RAM)",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\\EnablePageCombining",
+      "value": 0,
+      "os": ["win10", "win11"],
+      "risk": "High",
+      "requiresConfirmation": true,
+      "warning": "Only beneficial on 16 GB+ RAM. Increases working set at cost of page combining.",
+      "conditions": [
+        { "type": "MinimumRamGb", "operator": "Equals", "value": 16 }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.registry.prefetch.ssd",
+      "displayName": "Disable Prefetch on NVMe/SSD",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\\PrefetchParameters\\EnablePrefetcher",
+      "value": 0,
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "Disables prefetcher on SSD where it provides no benefit.",
+      "conditions": [
+        { "type": "StorageIsSsd", "operator": "Equals", "value": true }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.registry.superfetch.ssd",
+      "displayName": "Disable SuperFetch on NVMe/SSD",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\\PrefetchParameters\\EnableSuperfetch",
+      "value": 0,
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "Disables SuperFetch prediction on SSD where it provides no benefit.",
+      "conditions": [
+        { "type": "StorageIsSsd", "operator": "Equals", "value": true }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.registry.visualfx",
+      "displayName": "Visual Effects — Best Performance",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects\\VisualFXSetting",
+      "value": 2,
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "Sets Windows to Best Performance visual mode.",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.registry.menufade",
+      "displayName": "Disable Menu Fade Animation",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\Control Panel\\Desktop\\UserPreferencesMask",
+      "value": "9012038010000000",
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.registry.smoothscroll",
+      "displayName": "Disable Smooth Scroll (Listbox)",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\Control Panel\\Desktop\\SmoothScroll",
+      "value": 0,
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.pagefile",
+      "displayName": "Workload-Aware Pagefile Optimization",
+      "category": "Memory",
+      "action": "SetPagefile",
+      "target": "Auto",
+      "value": "Auto",
+      "os": ["win10", "win11"],
+      "risk": "High",
+      "requiresConfirmation": true,
+      "warning": "Adjusts pagefile to system-managed. Verify enough free disk space is available.",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.process.onedrive",
+      "displayName": "Reduce OneDrive Background Priority",
+      "category": "Competition",
+      "action": "SetProcessPriority",
+      "target": "OneDrive",
+      "value": "Idle",
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [
+        { "type": "WorkloadInstalled", "operator": "Equals", "value": "OneDrive" }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.process.widgets",
+      "displayName": "Reduce Widgets Background Priority",
+      "category": "Competition",
+      "action": "SetProcessPriority",
+      "target": "Widgets",
+      "value": "Idle",
+      "os": ["win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.registry.nv.maxpower",
+      "displayName": "NVIDIA Max Power Mode (Prefer Maximum Performance)",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Services\\nvlddmkm\\Global\\NvCplHorizontalPageFiles\\PowerMizerEnable",
+      "value": 1,
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "Enables NVIDIA performance profile via registry. Requires NVIDIA GPU.",
+      "conditions": [
+        { "type": "HasNvidiaGpu", "operator": "Equals", "value": true }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.registry.nv.throttle",
+      "displayName": "Disable NVIDIA Power Throttling",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Services\\nvlddmkm\\Global\\NvCplHorizontalPageFiles\\PowerMizerLevel",
+      "value": 1,
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "Sets NVIDIA to Prefer Maximum Performance. Requires NVIDIA GPU.",
+      "conditions": [
+        { "type": "HasNvidiaGpu", "operator": "Equals", "value": true },
+        { "type": "IsOnAc", "operator": "Equals", "value": true }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.registry.svchostsplit",
+      "displayName": "Reduce SvcHost Split Threshold (Large RAM)",
+      "category": "Registry",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\SvcHostSplitThresholdInKB",
+      "value": 67108864,
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "Groups svchost instances together on large RAM systems, reducing process overhead.",
+      "conditions": [
+        { "type": "MinimumRamGb", "operator": "Equals", "value": 8 }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.ae.priority",
+      "displayName": "After Effects — Process Priority Boost",
+      "category": "Workload",
+      "action": "SetProcessPriority",
+      "target": "AfterFX",
+      "value": "AboveNormal",
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "Only applies when After Effects process is running.",
+      "conditions": [
+        { "type": "WorkloadInstalled", "operator": "Equals", "value": "AdobeAfterEffects" }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "maxperf.bluestacks.virt",
+      "displayName": "BlueStacks — Verify Virtualization Available",
+      "category": "Workload",
+      "action": "SetForegroundPriority",
+      "target": "Win32PrioritySeparation",
+      "value": 26,
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "Ensures BlueStacks has balanced foreground CPU access.",
+      "conditions": [
+        { "type": "WorkloadInstalled", "operator": "Equals", "value": "BlueStacks" },
+        { "type": "VirtualizationEnabled", "operator": "Equals", "value": true }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    }
+  ]
+}

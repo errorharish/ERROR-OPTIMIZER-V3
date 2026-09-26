@@ -1,0 +1,81 @@
+<UserControl x:Class="BiosOptimizer.GUI.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent" UseLayoutRounding="True" SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Style="{StaticResource SlimScrollViewer}">
+        <Grid Margin="28,24,24,24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0">
+                <StackPanel>
+                    <TextBlock Text="Settings" Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock Text="Configure application behavior and appearance." 
+                               Style="{StaticResource PageSubtitleStyle}"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Settings Form -->
+            <Border Grid.Row="2" Style="{StaticResource GlassCardStyle}" Padding="24">
+                <StackPanel>
+                    <TextBlock Text="Appearance &amp; Accessibility" Style="{StaticResource CardTitleStyle}"
+                               Margin="0,0,0,16"/>
+                    
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Enable Animations" FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextPrimaryBrush}" FontSize="12"/>
+                            <TextBlock Text="Allow smooth transitions and score animations."
+                                       Foreground="{StaticResource TextMutedBrush}" FontSize="10" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <CheckBox Grid.Column="1" IsChecked="{Binding AnimationsEnabled}"
+                                  VerticalAlignment="Center"/>
+                    </Grid>
+                    
+                    <Rectangle Style="{StaticResource SidebarSeparatorStyle}" Margin="0,8,0,16"/>
+                    
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Reduced Motion" FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextPrimaryBrush}" FontSize="12"/>
+                            <TextBlock Text="Disable continuous animations to reduce visual strain."
+                                       Foreground="{StaticResource TextMutedBrush}" FontSize="10" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <CheckBox Grid.Column="1" IsChecked="{Binding ReducedMotion}"
+                                  VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Rectangle Style="{StaticResource SidebarSeparatorStyle}" Margin="0,8,0,16"/>
+                    
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Glass Opacity" FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextPrimaryBrush}" FontSize="12"/>
+                            <TextBlock Text="Adjust the transparency of panels."
+                                       Foreground="{StaticResource TextMutedBrush}" FontSize="10" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <Slider Grid.Column="1" Width="120" Minimum="0.5" Maximum="1.0" Value="{Binding GlassOpacity}"
+                                VerticalAlignment="Center"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
+

@@ -1,0 +1,1191 @@
+{
+    "id":  "Normal",
+    "displayName":  "Normal Optimization",
+    "description":  "Safe everyday Windows optimization. Disables non-essential telemetry, retail, and background services. Machine-aware: hardware and dependency gates applied per target.",
+    "targetProcessReduction":  {
+                                   "min":  20,
+                                   "max":  45
+                               },
+    "entries":  [
+                    {
+                        "id":  "normal.service.diagtrack",
+                        "displayName":  "Connected User Experiences and Telemetry",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "DiagTrack",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables Windows telemetry collection.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.dmwappushservice",
+                        "displayName":  "WAP Push Message Routing Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "dmwappushservice",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.retaildemo",
+                        "displayName":  "Retail Demo Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "RetailDemo",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.mapsbroker",
+                        "displayName":  "Downloaded Maps Manager",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "MapsBroker",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables automatic map downloads.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.wersvc",
+                        "displayName":  "Windows Error Reporting Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "WerSvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables Windows error reporting.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.wercplsupport",
+                        "displayName":  "Problem Reports Control Panel Support",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "wercplsupport",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.fax",
+                        "displayName":  "Fax Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "Fax",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when no printer or fax device detected.",
+                        "conditions":  [
+                                           {
+                                               "type":  "HasPrinter",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.wmpnetworksvc",
+                        "displayName":  "Windows Media Player Network Sharing",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "WMPNetworkSvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables Windows Media Player network sharing.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.xblAuthManager",
+                        "displayName":  "Xbox Live Auth Manager",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "XblAuthManager",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when Xbox/Game Pass is not detected.",
+                        "conditions":  [
+                                           {
+                                               "type":  "WorkloadNotInstalled",
+                                               "operator":  "Equals",
+                                               "value":  "XboxGamePass"
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.xblGameSave",
+                        "displayName":  "Xbox Live Game Save",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "XblGameSave",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when Xbox/Game Pass is not detected.",
+                        "conditions":  [
+                                           {
+                                               "type":  "WorkloadNotInstalled",
+                                               "operator":  "Equals",
+                                               "value":  "XboxGamePass"
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.xboxNetApiSvc",
+                        "displayName":  "Xbox Live Networking Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "XboxNetApiSvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when Xbox/Game Pass is not detected.",
+                        "conditions":  [
+                                           {
+                                               "type":  "WorkloadNotInstalled",
+                                               "operator":  "Equals",
+                                               "value":  "XboxGamePass"
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.walletservice",
+                        "displayName":  "Wallet Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "WalletService",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables Windows Wallet and NFC payment infrastructure.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.phonesvc",
+                        "displayName":  "Phone Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "PhoneSvc",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Sets Phone Link integration to manual startup.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.tzautoupdate",
+                        "displayName":  "Auto Time Zone Updater",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "tzautoupdate",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables automatic time zone detection from location.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.sharedaccess",
+                        "displayName":  "Internet Connection Sharing",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "SharedAccess",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables Windows Internet Connection Sharing / mobile hotspot functionality.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.pnrpautoreg",
+                        "displayName":  "PNRP Machine Name Publication",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "PNRPAutoReg",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.pnrpsvc",
+                        "displayName":  "Peer Name Resolution Protocol",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "PNRPsvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.snmptrap",
+                        "displayName":  "SNMP Trap Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "SNMPTRAP",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.tiering",
+                        "displayName":  "Storage Tiers Management Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "TieringEngineService",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Only useful on systems with tiered storage (SSD + HDD pool).",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.service.remoteregistry",
+                        "displayName":  "Remote Registry",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "RemoteRegistry",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Prevents remote registry access. Safe for home/non-domain machines.",
+                        "conditions":  [
+                                           {
+                                               "type":  "IsDomainJoined",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.registry.gamedvr1",
+                        "displayName":  "Disable Game DVR App Capture",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\GameDVR\\AppCaptureEnabled",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables Game DVR capture overlay.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.registry.gamedvr2",
+                        "displayName":  "Disable Game DVR Globally",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\System\\GameConfigStore\\GameDVR_Enabled",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables Game DVR background recording.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.registry.menudelay",
+                        "displayName":  "Remove Menu Show Delay",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\Control Panel\\Desktop\\MenuShowDelay",
+                        "value":  "0",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.registry.autoendtasks",
+                        "displayName":  "Enable Auto-End of Hung Tasks",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\Control Panel\\Desktop\\AutoEndTasks",
+                        "value":  "1",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.registry.hungapptimeout",
+                        "displayName":  "Reduce Hung Application Timeout",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\Control Panel\\Desktop\\HungAppTimeout",
+                        "value":  "1000",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.registry.waittokillapp",
+                        "displayName":  "Reduce Wait-to-Kill App Timeout",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\Control Panel\\Desktop\\WaitToKillAppTimeout",
+                        "value":  "1000",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.registry.waittokillservice",
+                        "displayName":  "Reduce Wait-to-Kill Service Timeout",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKLM\\SYSTEM\\CurrentControlSet\\Control\\WaitToKillServiceTimeout",
+                        "value":  "2000",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.registry.telemetry1",
+                        "displayName":  "Disable Telemetry (HKLM)",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection\\AllowTelemetry",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.registry.advertisingid",
+                        "displayName":  "Disable Advertising ID",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo\\Enabled",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.registry.contentdelivery1",
+                        "displayName":  "Disable Content Delivery Auto-Install",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\\ContentDeliveryAllowed",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Prevents automatic installation of suggested apps.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.registry.silentappinstall",
+                        "displayName":  "Disable Silent App Installs",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\\SilentInstalledAppsEnabled",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.registry.oobesuggestions",
+                        "displayName":  "Disable OOBE System Pane Suggestions",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\\SystemPaneSuggestionsEnabled",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.registry.disablefeedback",
+                        "displayName":  "Disable Windows Feedback Notifications",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Microsoft\\Siuf\\Rules\\NumberOfSIUFInPeriod",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.task.appraiser",
+                        "displayName":  "Microsoft Compatibility Appraiser",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Application Experience\\Microsoft Compatibility Appraiser",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.task.programdataupdater",
+                        "displayName":  "ProgramDataUpdater Task",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Application Experience\\ProgramDataUpdater",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.task.aitagent",
+                        "displayName":  "AIT Uploader (Application Experience)",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Application Experience\\AIT Uploader",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.task.consolidator",
+                        "displayName":  "CEIP Consolidator",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Customer Experience Improvement Program\\Consolidator",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.task.usbceip",
+                        "displayName":  "USB CEIP Task",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Customer Experience Improvement Program\\UsbCeip",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.task.kernelceitpol",
+                        "displayName":  "KernelCeipTask",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Customer Experience Improvement Program\\KernelCeipTask",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.task.wer1",
+                        "displayName":  "Windows Error Reporting Queue Reporting",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Windows Error Reporting\\QueueReporting",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.task.mapstile",
+                        "displayName":  "Maps Toast Task",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Maps\\MapsToastTask",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.task.mapsupdate",
+                        "displayName":  "Maps Update Task",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Maps\\MapsUpdateTask",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.task.diskdiag",
+                        "displayName":  "Disk Diagnostic Data Collector",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\DiskDiagnostic\\Microsoft-Windows-DiskDiagnosticDataCollector",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.task.powereff",
+                        "displayName":  "Power Efficiency Diagnostics Analyzer",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Power Efficiency Diagnostics\\AnalyzeSystem",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "normal.task.location",
+                        "displayName":  "Location Framework Notifications",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Location\\Notifications",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "normal.reg.dragfullwindows",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Disable Full Window Dragging",
+                        "risk":  "Low",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Desktop\\DragFullWindows",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "0"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "normal.reg.fontsmoothing",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Optimize Font Smoothing",
+                        "risk":  "Low",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Desktop\\FontSmoothing",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "2"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "normal.reg.minanimate",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Disable Min/Max Animations",
+                        "risk":  "Low",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Desktop\\MinAnimate",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "0"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "normal.reg.smoothscroll",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Disable Smooth Scrolling",
+                        "risk":  "Low",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Desktop\\SmoothScroll",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  0
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "normal.reg.taskbaranimations",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Disable Taskbar Animations",
+                        "risk":  "Low",
+                        "warning":  "",
+                        "target":  "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarAnimations",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  0
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "normal.reg.listviewshadow",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Disable Listview Shadows",
+                        "risk":  "Low",
+                        "warning":  "",
+                        "target":  "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\ListviewShadow",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  0
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "normal.reg.enableaeropeek",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Disable Aero Peek",
+                        "risk":  "Low",
+                        "warning":  "",
+                        "target":  "HKCU\\Software\\Microsoft\\Windows\\DWM\\EnableAeroPeek",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  0
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "normal.reg.mousesensitivity",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Optimize Mouse Sensitivity",
+                        "risk":  "Low",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Mouse\\MouseSensitivity",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "10"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "normal.reg.mousespeed",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Disable Mouse Acceleration (Speed)",
+                        "risk":  "Low",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Mouse\\MouseSpeed",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "0"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "normal.reg.mousethreshold1",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Disable Mouse Threshold 1",
+                        "risk":  "Low",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Mouse\\MouseThreshold1",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "0"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "normal.reg.mousethreshold2",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Disable Mouse Threshold 2",
+                        "risk":  "Low",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Mouse\\MouseThreshold2",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "0"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "normal.reg.keyboarddelay",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Minimum Keyboard Delay",
+                        "risk":  "Low",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Keyboard\\KeyboardDelay",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "0"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "normal.reg.keyboardspeed",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Maximum Keyboard Speed",
+                        "risk":  "Low",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Keyboard\\KeyboardSpeed",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "31"
+                    }
+                ]
+}

@@ -1,0 +1,1162 @@
+{
+    "id":  "Pro",
+    "displayName":  "Pro Optimization",
+    "description":  "Advanced power-user optimization. Extends Normal with deeper service, registry, scheduled task, and hardware-gated targets. GPU vendor, laptop/desktop, and workload detection applied.",
+    "extends":  [
+                    "Normal"
+                ],
+    "targetProcessReduction":  {
+                                   "min":  50,
+                                   "max":  90
+                               },
+    "entries":  [
+                    {
+                        "id":  "pro.service.sysmain",
+                        "displayName":  "SuperFetch / SysMain (SSD systems)",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "SysMain",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disabling SysMain on SSD reduces unnecessary disk prefetch I/O. On HDD, this may reduce app launch performance.",
+                        "conditions":  [
+                                           {
+                                               "type":  "StorageIsSsd",
+                                               "operator":  "Equals",
+                                               "value":  true
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.wsearch",
+                        "displayName":  "Windows Search Indexing",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "WSearch",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Reduces background indexing. Search still works on demand.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.spooler",
+                        "displayName":  "Print Spooler (no printer detected)",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "Spooler",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when no printer is detected.",
+                        "conditions":  [
+                                           {
+                                               "type":  "HasPrinter",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.bthserv",
+                        "displayName":  "Bluetooth Support Service (no BT device)",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "bthserv",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when no Bluetooth device is paired.",
+                        "conditions":  [
+                                           {
+                                               "type":  "HasBluetooth",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.btagservice",
+                        "displayName":  "Bluetooth Audio Gateway Service (no BT)",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "BTAGService",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when no Bluetooth device detected.",
+                        "conditions":  [
+                                           {
+                                               "type":  "HasBluetooth",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.tabletinput",
+                        "displayName":  "Tablet Input Service (no touchscreen)",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "TabletInputService",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when no touchscreen or pen input detected.",
+                        "conditions":  [
+                                           {
+                                               "type":  "HasTouchscreen",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.xboxgipsvc",
+                        "displayName":  "Xbox Accessory Management (no Xbox detected)",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "XboxGipSvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when Xbox or Game Pass is not detected.",
+                        "conditions":  [
+                                           {
+                                               "type":  "WorkloadNotInstalled",
+                                               "operator":  "Equals",
+                                               "value":  "XboxGamePass"
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.wbiosrvc",
+                        "displayName":  "Windows Biometric Service (no camera/Hello)",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "WbioSrvc",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when no camera or biometric device is detected.",
+                        "conditions":  [
+                                           {
+                                               "type":  "HasCamera",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.remoteregistry",
+                        "displayName":  "Remote Registry (non-domain)",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "RemoteRegistry",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe for non-domain-joined machines.",
+                        "conditions":  [
+                                           {
+                                               "type":  "IsDomainJoined",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.lfsvc",
+                        "displayName":  "Geolocation Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "lfsvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables location awareness; affects location-aware apps.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.seclogon",
+                        "displayName":  "Secondary Logon",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "seclogon",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables \u0027Run as different user\u0027. Safe for single-user systems.",
+                        "conditions":  [
+                                           {
+                                               "type":  "IsDomainJoined",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.scardsvr",
+                        "displayName":  "Smart Card Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "SCardSvr",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when no smart card reader is used.",
+                        "conditions":  [
+                                           {
+                                               "type":  "IsDomainJoined",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.stisvc",
+                        "displayName":  "Windows Image Acquisition (camera/scanner)",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "stisvc",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when no scanner is present.",
+                        "conditions":  [
+                                           {
+                                               "type":  "HasCamera",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.wiarpc",
+                        "displayName":  "Still Image Acquisition Events",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "WiaRpc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when no scanner present.",
+                        "conditions":  [
+                                           {
+                                               "type":  "HasCamera",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.trkwks",
+                        "displayName":  "Distributed Link Tracking Client",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "TrkWks",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Tracks file link changes. Not needed on standalone machines.",
+                        "conditions":  [
+                                           {
+                                               "type":  "IsDomainJoined",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.lltdsvc",
+                        "displayName":  "Link-Layer Topology Discovery Mapper",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "lltdsvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Used by network topology display in router admin pages.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.qwave",
+                        "displayName":  "Quality Windows Audio Video Experience",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "QWAVE",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Used for network QoS for streaming audio/video.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.upnphost",
+                        "displayName":  "UPnP Device Host",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "upnphost",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables UPnP device hosting. Rarely needed on desktop.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.rasauto",
+                        "displayName":  "Remote Access Auto Connection Manager",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "RasAuto",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables automatic dial-up/VPN reconnection.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.rasman",
+                        "displayName":  "Remote Access Connection Manager",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "RasMan",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Sets VPN/RAS connections to on-demand startup.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.webclnt",
+                        "displayName":  "WebClient (WebDAV)",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "WebClient",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables WebDAV drive mounting. Rarely used.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.mdmsvc",
+                        "displayName":  "Mobile Device Management Enrollment",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "MdmSvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe for non-enterprise machines.",
+                        "conditions":  [
+                                           {
+                                               "type":  "IsDomainJoined",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.icssvc",
+                        "displayName":  "Mobile Hotspot Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "icssvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables Windows mobile hotspot functionality.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.wpnsvc",
+                        "displayName":  "Windows Push Notification Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "WpnService",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables Windows push notifications.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.defragsvc",
+                        "displayName":  "Optimize Drives (Defrag) — HDD only",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "defragsvc",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Defrag is unnecessary on SSD. Only applies to HDD.",
+                        "conditions":  [
+                                           {
+                                               "type":  "StorageIsHdd",
+                                               "operator":  "Equals",
+                                               "value":  true
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.nv.container",
+                        "displayName":  "NVIDIA Container (telemetry) — NVIDIA only",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "NvTelemetryContainer",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables NVIDIA telemetry container. Requires NVIDIA GPU.",
+                        "conditions":  [
+                                           {
+                                               "type":  "HasNvidiaGpu",
+                                               "operator":  "Equals",
+                                               "value":  true
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.service.nv.agent",
+                        "displayName":  "NVIDIA Telemetry Agent — NVIDIA only",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "nvagent",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables NVIDIA telemetry agent. Requires NVIDIA GPU.",
+                        "conditions":  [
+                                           {
+                                               "type":  "HasNvidiaGpu",
+                                               "operator":  "Equals",
+                                               "value":  true
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.startup.onedrive",
+                        "displayName":  "OneDrive Startup (if installed)",
+                        "category":  "Startup",
+                        "action":  "DisableStartupEntry",
+                        "target":  "OneDrive",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "OneDrive sync won\u0027t auto-start. You can launch manually.",
+                        "conditions":  [
+                                           {
+                                               "type":  "WorkloadDetected",
+                                               "operator":  "Equals",
+                                               "value":  "OneDrive"
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.registry.ntfslastaccess",
+                        "displayName":  "Disable NTFS Last Access Timestamp Update",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKLM\\SYSTEM\\CurrentControlSet\\Control\\FileSystem\\NtfsDisableLastAccessUpdate",
+                        "value":  1,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Reduces metadata I/O on file access.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.registry.ntfs8dot3",
+                        "displayName":  "Disable NTFS 8.3 Short Filenames",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKLM\\SYSTEM\\CurrentControlSet\\Control\\FileSystem\\NtfsDisable8dot3NameCreation",
+                        "value":  1,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Reduces filesystem overhead. May affect very old 16-bit software.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.registry.networkthrottling",
+                        "displayName":  "Disable Multimedia Network Throttling",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\NetworkThrottlingIndex",
+                        "value":  -1,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Removes network throttling for multimedia applications.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.registry.systemresponsiveness",
+                        "displayName":  "Optimize SystemResponsiveness for Games/Tasks",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\SystemResponsiveness",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Sets multimedia/game priority to maximum.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.registry.win32priority",
+                        "displayName":  "Optimize Win32 Priority Separation",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKLM\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl\\Win32PrioritySeparation",
+                        "value":  38,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Biases CPU quantum toward foreground applications.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.registry.tcpnoack",
+                        "displayName":  "Disable TCP Delayed ACK",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKLM\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\TcpAckFrequency",
+                        "value":  1,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Reduces TCP ACK latency for low-latency network traffic.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.registry.disablepaging",
+                        "displayName":  "Keep Kernel in RAM (DisablePagingExecutive)",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\\DisablePagingExecutive",
+                        "value":  1,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Keeps kernel drivers in RAM. Best on systems with 16 GB+ RAM.",
+                        "conditions":  [
+                                           {
+                                               "type":  "MinimumRamGb",
+                                               "operator":  "Equals",
+                                               "value":  16
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.registry.bingsearch",
+                        "displayName":  "Disable Bing Web Search in Start Menu",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Search\\BingSearchEnabled",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Stops Start Menu from searching Bing online.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.registry.disablewebsearch",
+                        "displayName":  "Disable Web Search in Start",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Policies\\Microsoft\\Windows\\Explorer\\DisableSearchBoxSuggestions",
+                        "value":  1,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.registry.consumerfeat",
+                        "displayName":  "Disable Consumer Features (Start bloat)",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent\\DisableWindowsConsumerFeatures",
+                        "value":  1,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Prevents Microsoft from pushing consumer app suggestions.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.registry.tailored",
+                        "displayName":  "Disable Tailored Experiences",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent\\DisableTailoredExperiencesWithDiagnosticData",
+                        "value":  1,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.registry.edgepreload",
+                        "displayName":  "Disable Edge Startup Boost",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\StartupBoostEnabled",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Prevents Edge from preloading at Windows startup.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.task.defrag.ssd",
+                        "displayName":  "Disable Scheduled Defrag (SSD)",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Defrag\\ScheduledDefrag",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe on SSD — defrag causes unnecessary write cycles.",
+                        "conditions":  [
+                                           {
+                                               "type":  "StorageIsSsd",
+                                               "operator":  "Equals",
+                                               "value":  true
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.task.bluetooth",
+                        "displayName":  "Bluetooth AVRCP Task",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Bluetooth\\UninstallDeviceTask",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe when no Bluetooth device detected.",
+                        "conditions":  [
+                                           {
+                                               "type":  "HasBluetooth",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.task.memorydiag",
+                        "displayName":  "Memory Diagnostic Scheduler",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\MemoryDiagnostic\\ProcessMemoryDiagnosticEvents",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.task.cloudexp",
+                        "displayName":  "Cloud Experience Host Logon Task",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\CloudExperienceHost\\CreateObjectTask",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.task.nv.update",
+                        "displayName":  "NVIDIA Driver Update Task",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\NvDriverUpdate",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables automatic NVIDIA driver update check. Requires NVIDIA GPU.",
+                        "conditions":  [
+                                           {
+                                               "type":  "HasNvidiaGpu",
+                                               "operator":  "Equals",
+                                               "value":  true
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.task.office.telemetry",
+                        "displayName":  "Office Telemetry Agent",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Office\\OfficeTelemetryAgentLogOn",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables Office telemetry upload. Safe.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "pro.task.speech",
+                        "displayName":  "Speech Model Download Task",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Speech\\SpeechModelDownloadTask",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "pro.reg.networkthrottling",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Disable Network Throttling",
+                        "risk":  "Medium",
+                        "warning":  "",
+                        "target":  "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\NetworkThrottlingIndex",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  4294967295
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "pro.reg.systemresponsiveness",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Multimedia System Responsiveness",
+                        "risk":  "Medium",
+                        "warning":  "",
+                        "target":  "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\SystemResponsiveness",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  0
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "pro.reg.gpupriority",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Game GPU Priority",
+                        "risk":  "Medium",
+                        "warning":  "",
+                        "target":  "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games\\GPU Priority",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  8
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "pro.reg.priority",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Game Priority",
+                        "risk":  "Medium",
+                        "warning":  "",
+                        "target":  "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games\\Priority",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  6
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "pro.reg.scheduling",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Game Scheduling Category",
+                        "risk":  "Medium",
+                        "warning":  "",
+                        "target":  "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games\\Scheduling Category",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "High"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "pro.reg.sfiopriority",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Game SFIO Priority",
+                        "risk":  "Medium",
+                        "warning":  "",
+                        "target":  "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games\\SFIO Priority",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "High"
+                    }
+                ]
+}

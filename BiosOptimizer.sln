@@ -1,0 +1,92 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0FB4B093-5FA2-45AB-8901-9D107F26F955}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiosOptimizer.Core", "src\BiosOptimizer.Core\BiosOptimizer.Core.csproj", "{01EE3428-F53E-4CF2-BEE4-404B727B9A02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiosOptimizer.Detection", "src\BiosOptimizer.Detection\BiosOptimizer.Detection.csproj", "{BFB0FCA1-5A41-475C-A9FE-448A810A258E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiosOptimizer.Safety", "src\BiosOptimizer.Safety\BiosOptimizer.Safety.csproj", "{5BE54FF5-A848-4E8B-9BA0-9CD830FDCE88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiosOptimizer.CLI", "src\BiosOptimizer.CLI\BiosOptimizer.CLI.csproj", "{0E81622A-B030-4A7F-802D-1F539BCDD731}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D55D4444-AB35-46EF-BF19-9EF987696214}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiosOptimizer.Core.Tests", "tests\BiosOptimizer.Core.Tests\BiosOptimizer.Core.Tests.csproj", "{42CCC85E-F2AB-4B56-B6AB-6DF35E1B47CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiosOptimizer.Detection.Tests", "tests\BiosOptimizer.Detection.Tests\BiosOptimizer.Detection.Tests.csproj", "{9C163AAC-A091-4C3D-878D-053BA1DAFDF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiosOptimizer.Safety.Tests", "tests\BiosOptimizer.Safety.Tests\BiosOptimizer.Safety.Tests.csproj", "{6C59A4BB-7E44-48B5-BC25-616B2DA6A49C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiosOptimizer.IPC", "src\BiosOptimizer.IPC\BiosOptimizer.IPC.csproj", "{7F9587B4-2F91-4AC4-9663-C1DB2FC18E35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiosOptimizer.Service", "src\BiosOptimizer.Service\BiosOptimizer.Service.csproj", "{0734C063-81EE-4EE3-A0B0-531F6DDA54B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiosOptimizer.GUI", "src\BiosOptimizer.GUI\BiosOptimizer.GUI.csproj", "{03B5A5CF-26B8-40FF-AA2E-8BF7D8B8753B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01EE3428-F53E-4CF2-BEE4-404B727B9A02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01EE3428-F53E-4CF2-BEE4-404B727B9A02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01EE3428-F53E-4CF2-BEE4-404B727B9A02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01EE3428-F53E-4CF2-BEE4-404B727B9A02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFB0FCA1-5A41-475C-A9FE-448A810A258E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFB0FCA1-5A41-475C-A9FE-448A810A258E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFB0FCA1-5A41-475C-A9FE-448A810A258E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFB0FCA1-5A41-475C-A9FE-448A810A258E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BE54FF5-A848-4E8B-9BA0-9CD830FDCE88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BE54FF5-A848-4E8B-9BA0-9CD830FDCE88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BE54FF5-A848-4E8B-9BA0-9CD830FDCE88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BE54FF5-A848-4E8B-9BA0-9CD830FDCE88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E81622A-B030-4A7F-802D-1F539BCDD731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E81622A-B030-4A7F-802D-1F539BCDD731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E81622A-B030-4A7F-802D-1F539BCDD731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E81622A-B030-4A7F-802D-1F539BCDD731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42CCC85E-F2AB-4B56-B6AB-6DF35E1B47CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42CCC85E-F2AB-4B56-B6AB-6DF35E1B47CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42CCC85E-F2AB-4B56-B6AB-6DF35E1B47CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42CCC85E-F2AB-4B56-B6AB-6DF35E1B47CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C163AAC-A091-4C3D-878D-053BA1DAFDF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C163AAC-A091-4C3D-878D-053BA1DAFDF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C163AAC-A091-4C3D-878D-053BA1DAFDF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C163AAC-A091-4C3D-878D-053BA1DAFDF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C59A4BB-7E44-48B5-BC25-616B2DA6A49C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C59A4BB-7E44-48B5-BC25-616B2DA6A49C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C59A4BB-7E44-48B5-BC25-616B2DA6A49C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C59A4BB-7E44-48B5-BC25-616B2DA6A49C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F9587B4-2F91-4AC4-9663-C1DB2FC18E35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F9587B4-2F91-4AC4-9663-C1DB2FC18E35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F9587B4-2F91-4AC4-9663-C1DB2FC18E35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F9587B4-2F91-4AC4-9663-C1DB2FC18E35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0734C063-81EE-4EE3-A0B0-531F6DDA54B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0734C063-81EE-4EE3-A0B0-531F6DDA54B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0734C063-81EE-4EE3-A0B0-531F6DDA54B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0734C063-81EE-4EE3-A0B0-531F6DDA54B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03B5A5CF-26B8-40FF-AA2E-8BF7D8B8753B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03B5A5CF-26B8-40FF-AA2E-8BF7D8B8753B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03B5A5CF-26B8-40FF-AA2E-8BF7D8B8753B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03B5A5CF-26B8-40FF-AA2E-8BF7D8B8753B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{01EE3428-F53E-4CF2-BEE4-404B727B9A02} = {0FB4B093-5FA2-45AB-8901-9D107F26F955}
+		{BFB0FCA1-5A41-475C-A9FE-448A810A258E} = {0FB4B093-5FA2-45AB-8901-9D107F26F955}
+		{5BE54FF5-A848-4E8B-9BA0-9CD830FDCE88} = {0FB4B093-5FA2-45AB-8901-9D107F26F955}
+		{0E81622A-B030-4A7F-802D-1F539BCDD731} = {0FB4B093-5FA2-45AB-8901-9D107F26F955}
+		{42CCC85E-F2AB-4B56-B6AB-6DF35E1B47CA} = {D55D4444-AB35-46EF-BF19-9EF987696214}
+		{9C163AAC-A091-4C3D-878D-053BA1DAFDF6} = {D55D4444-AB35-46EF-BF19-9EF987696214}
+		{6C59A4BB-7E44-48B5-BC25-616B2DA6A49C} = {D55D4444-AB35-46EF-BF19-9EF987696214}
+		{7F9587B4-2F91-4AC4-9663-C1DB2FC18E35} = {0FB4B093-5FA2-45AB-8901-9D107F26F955}
+		{0734C063-81EE-4EE3-A0B0-531F6DDA54B7} = {0FB4B093-5FA2-45AB-8901-9D107F26F955}
+		{03B5A5CF-26B8-40FF-AA2E-8BF7D8B8753B} = {0FB4B093-5FA2-45AB-8901-9D107F26F955}
+	EndGlobalSection
+EndGlobal

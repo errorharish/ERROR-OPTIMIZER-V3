@@ -1,0 +1,486 @@
+﻿<Window x:Class="BiosOptimizer.GUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:BiosOptimizer.GUI"
+        Title="Error Optimizer" Height="780" Width="1280"
+        MinHeight="680" MinWidth="1100"
+        WindowStyle="None" Background="#0A0B0E"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5"
+                      GlassFrameThickness="0" CornerRadius="0"/>
+    </WindowChrome.WindowChrome>
+
+    <!-- Root border (window frame) -->
+    <Border x:Name="RootBorder" Background="{StaticResource BgBaseBrush}"
+            BorderBrush="#1A1D26" BorderThickness="1">
+
+        <Grid>
+            <!-- â•â• ATMOSPHERIC BACKGROUND LAYERS â•â• -->
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#090A0C" Offset="0"/>
+                    <GradientStop Color="#0B0D12" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <!-- Cursor ambient glow layer (GPU friendly) -->
+            <Canvas x:Name="CursorCanvas" IsHitTestVisible="False" ClipToBounds="True">
+                <Ellipse x:Name="CursorGlow" Width="300" Height="300"
+                         Opacity="0"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#40E53935" Offset="0"/>
+                            <GradientStop Color="#00E53935" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TranslateTransform x:Name="CursorTranslate" X="-1000" Y="-1000"/>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+            </Canvas>
+
+            <!-- Radial glow #1 â€” top-center deep red -->
+            <Ellipse Width="700" Height="400"
+                     HorizontalAlignment="Center" VerticalAlignment="Top"
+                     Margin="100,-200,0,0" IsHitTestVisible="False">
+                <Ellipse.Fill>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#1A0505" Offset="0"/>
+                        <GradientStop Color="#00000000" Offset="1"/>
+                    </RadialGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+
+            <!-- Radial glow #2 â€” right-center crimson -->
+            <Ellipse Width="500" Height="500"
+                     HorizontalAlignment="Right" VerticalAlignment="Center"
+                     Margin="0,0,-150,100" IsHitTestVisible="False" Opacity="0.5">
+                <Ellipse.Fill>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#110303" Offset="0"/>
+                        <GradientStop Color="#00000000" Offset="1"/>
+                    </RadialGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+
+            <!-- Radial glow #3 â€” bottom-left subtle warm -->
+            <Ellipse Width="400" Height="300"
+                     HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                     Margin="-50,0,0,-80" IsHitTestVisible="False" Opacity="0.4">
+                <Ellipse.Fill>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#0D0203" Offset="0"/>
+                        <GradientStop Color="#00000000" Offset="1"/>
+                    </RadialGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+
+            <!-- â•â• LAYOUT: TitleBar + Body â•â• -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="46"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- â•â• TITLE BAR â•â• -->
+                <Border Grid.Row="0"
+                        Background="{StaticResource TopBarBrush}"
+                        BorderBrush="#14161E" BorderThickness="0,0,0,1"
+                        MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="240"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Logo -->
+                        <StackPanel Grid.Column="0" Orientation="Horizontal"
+                                    VerticalAlignment="Center" Margin="20,0">
+                            <!-- Red dot marker -->
+                            <Border Width="6" Height="6" CornerRadius="3"
+                                    Background="{StaticResource AccentBrush}"
+                                    Margin="0,0,10,0" VerticalAlignment="Center">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#E53935" BlurRadius="6"
+                                                      ShadowDepth="0" Opacity="0.8"/>
+                                </Border.Effect>
+                            </Border>
+                            <StackPanel>
+                                <TextBlock Text="ERROR OPTIMIZER" FontSize="11" FontWeight="Bold"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           />
+                                <TextBlock Text="v2.0  Â·  System Optimizer" FontSize="8.5"
+                                           Foreground="{StaticResource TextMutedBrush}"
+                                           Margin="0,1,0,0" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Center status -->
+                        <StackPanel Grid.Column="1" Orientation="Horizontal"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Opacity="0.6">
+                            <Ellipse Width="5" Height="5" Margin="0,0,6,0"
+                                     x:Name="StatusDot" Fill="{Binding StatusBrush, FallbackValue=#4CAF50}"/>
+                            <TextBlock x:Name="StatusLabel" Text="{Binding StatusText, FallbackValue='Service Connected'}"
+                                       FontSize="9" Foreground="{StaticResource TextMutedBrush}"/>
+                        </StackPanel>
+
+                        <!-- Window controls -->
+                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                            <Button Content="&#xE949;" Style="{StaticResource ChromeButtonStyle}"
+                                    Click="MinimizeButton_Click" ToolTip="Minimize"/>
+                            <Button Content="&#xE923;" Style="{StaticResource ChromeButtonStyle}"
+                                    x:Name="MaxRestoreButton"
+                                    Click="MaximizeButton_Click" ToolTip="Maximize"/>
+                            <Button Content="&#xE8BB;" Style="{StaticResource ChromeCloseButtonStyle}"
+                                    Click="CloseButton_Click" ToolTip="Close"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- â•â• BODY: Sidebar + Content â•â• -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="240"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- â•â• SIDEBAR â•â• -->
+                    <Border Grid.Column="0"
+                            Background="{StaticResource SidebarBrush}"
+                            BorderBrush="#13151E" BorderThickness="0,0,1,0">
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      Style="{StaticResource SlimScrollViewer}">
+                            <StackPanel>
+
+                                <!-- OPTIMIZE section -->
+                                <TextBlock Text="OPTIMIZE" Style="{StaticResource SectionLabelStyle}"
+                                           />
+
+                                <Button x:Name="BtnNormal" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="Normal"
+                                        Tag="Normal">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconNormal}"
+                                                              Label="Normal" Tag="Normal"/>
+                                    </Button.Content>
+                                </Button>
+
+                                
+
+                                <Button x:Name="BtnPro" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="Pro"
+                                        Tag="Pro">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconPro}"
+                                                              Label="Pro" Tag="Pro"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button x:Name="BtnUltimate" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="Ultimate"
+                                        Tag="Ultimate">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconUltimate}"
+                                                              Label="Ultimate" Tag="Ultimate"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button x:Name="BtnDebloat" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="Debloat"
+                                        Tag="Debloat">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconDebloat}"
+                                                              Label="Debloat" Tag="Debloat"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button x:Name="BtnBiosSafe" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="BiosSafe"
+                                        Tag="BiosSafe">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconBiosSafe}"
+                                                              Label="BIOS Safe" Tag="BiosSafe"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button x:Name="BtnMaxPerf" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="MaxPerformance"
+                                        Tag="MaxPerformance">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconMaxPerf}"
+                                                              Label="Max Performance" Tag="MaxPerformance"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <!-- Divider -->
+                                <Rectangle Style="{StaticResource SidebarSeparatorStyle}"/>
+
+                                <!-- MONITOR section -->
+                                <TextBlock Text="MONITOR" Style="{StaticResource SectionLabelStyle}"
+                                           />
+
+                                <Button x:Name="BtnDashboard" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="Dashboard"
+                                        Tag="Dashboard">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconDashboard}"
+                                                              Label="Dashboard" Tag="Dashboard"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button x:Name="BtnProcessReduction" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="ProcessReduction"
+                                        Tag="ProcessReduction">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconProcess}"
+                                                              Label="Process Reduction" Tag="ProcessReduction"/>
+                                    </Button.Content>
+                                </Button>
+                                
+                                <Button Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="InputOptimizer"
+                                        Tag="InputOptimizer">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconInput}"
+                                                              Label="Input Optimizer" Tag="InputOptimizer"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="RegistryTweak"
+                                        Tag="RegistryTweak">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconSliders}"
+                                                             Label="Registry Tweak" Tag="RegistryTweak"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button x:Name="BtnSystemInfo" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="SystemInfo"
+                                        Tag="SystemInfo">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconSystemInfo}"
+                                                              Label="System Info" Tag="SystemInfo"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button x:Name="BtnStartup" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="StartupManager"
+                                        Tag="StartupManager">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconStartup}"
+                                                              Label="Startup Manager" Tag="StartupManager"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button x:Name="BtnServiceMgr" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="ServiceManager"
+                                        Tag="ServiceManager">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconServiceMgr}"
+                                                              Label="Service Manager" Tag="ServiceManager"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button x:Name="BtnNetwork" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="Network"
+                                        Tag="Network">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconNetwork}"
+                                                              Label="Network" Tag="Network"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button x:Name="BtnStorage" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="Storage"
+                                        Tag="Storage">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconStorage}"
+                                                              Label="Storage" Tag="Storage"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button x:Name="BtnTools" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="Tools"
+                                        Tag="Tools">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconTools}"
+                                                              Label="Tools" Tag="Tools"/>
+                                    </Button.Content>
+                                </Button>
+
+
+
+                                <!-- Divider -->
+                                <Rectangle Style="{StaticResource SidebarSeparatorStyle}"/>
+
+                                <Button x:Name="BtnSettings" Style="{StaticResource SidebarButtonStyle}"
+                                        Command="{Binding NavigateCommand}" CommandParameter="Settings"
+                                        Tag="Settings">
+                                    <Button.Content>
+                                        <local:SidebarNavItem Icon="{StaticResource IconSettings}"
+                                                              Label="Settings" Tag="Settings"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <!-- Sidebar footer -->
+                                <Border Margin="14,20,14,14" Padding="12,10"
+                                        Background="#0D0F14" CornerRadius="8"
+                                        BorderBrush="#1A1D26" BorderThickness="1">
+                                    <StackPanel>
+                                        <TextBlock Text="ERROR OPTIMIZER" FontSize="9"
+                                                   Foreground="#505565" FontWeight="SemiBold"
+                                                   />
+                                        <TextBlock Text="{Binding GuiBuildId, StringFormat='GUI: {0}'}" FontSize="9"
+                                                   Foreground="#454855" Margin="0,4,0,0"/>
+                                        <TextBlock Text="{Binding ServiceBuildId, StringFormat='SVC: {0}'}" FontSize="9"
+                                                   Foreground="#454855" Margin="0,2,0,0"/>
+                                        
+                                        <!-- Mismatch Warning -->
+                                        <Border Background="#20E53935" BorderBrush="#E53935" BorderThickness="1" CornerRadius="4" Padding="4" Margin="0,6,0,0"
+                                                Visibility="{Binding IsVersionMismatch, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <TextBlock Text="VERSION MISMATCH" FontSize="9" FontWeight="Bold" Foreground="#FF5252" HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+
+                    <!-- â•â• CONTENT AREA â•â• -->
+                    <Border Grid.Column="1" Background="Transparent">
+                        <!-- Page transition host -->
+                        <Grid>
+                            <!-- Content with fade transition -->
+                            <ContentControl x:Name="PageContent"
+                                            Content="{Binding CurrentView}"
+                                            Margin="0">
+                                <ContentControl.Template>
+                                    <ControlTemplate TargetType="ContentControl">
+                                        <Border>
+                                            <ContentPresenter x:Name="Presenter"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ContentControl.Template>
+                            </ContentControl>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <!-- â•â• PREMIUM OPTIMIZATION RESULT OVERLAY â•â• -->
+            <Border HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Visibility="{Binding ShowResultOverlay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Margin="0">
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="50" Opacity="0.8" Direction="270" ShadowDepth="10" />
+                </Border.Effect>
+                
+                <Border Background="#14161C" 
+                        BorderBrush="#252A36" 
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        Width="400"
+                        ClipToBounds="True">
+                    <StackPanel>
+                        <!-- Header -->
+                        <Border Background="#0C0E12" BorderBrush="#1C202B" BorderThickness="0,0,0,1" Padding="20,16">
+                            <StackPanel>
+                                <TextBlock Text="{Binding ResultTitle}" 
+                                           FontWeight="Bold" FontSize="16" 
+                                           HorizontalAlignment="Center"
+                                           Foreground="{Binding ResultType, Converter={StaticResource StatusToColorConverter}}"/>
+                                <TextBlock Text="{Binding ResultSubtitle}" 
+                                           Margin="0,4,0,0" FontSize="11"
+                                           Foreground="#80869C" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- Counts Body -->
+                        <Border Padding="24,20">
+                            <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <!-- Optimized -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Optimized" Foreground="#A0A6BC" Margin="0,0,0,6"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ResultOptimizedCount}" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            
+                            <!-- Already Optimized -->
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Already Optimized" Foreground="#A0A6BC" Margin="0,0,0,6"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ResultAlreadyOptimizedCount}" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            
+                            <!-- Not Available -->
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Not Available" Foreground="#80869C" Margin="0,0,0,6"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ResultNotAvailableCount}" Foreground="#80869C" Margin="0,0,0,6"/>
+                            
+                            <!-- Not Applicable -->
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Not Applicable" Foreground="#80869C" Margin="0,0,0,16"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ResultNotApplicableCount}" Foreground="#80869C" Margin="0,0,0,16"/>
+
+                            <!-- Failures (Conditional) -->
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Blocked" Foreground="#FF9800" Margin="0,0,0,6" Visibility="{Binding ResultBlockedCount, Converter={StaticResource CountToVisibilityConverter}}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ResultBlockedCount}" Foreground="#FF9800" FontWeight="Bold" Margin="0,0,0,6" Visibility="{Binding ResultBlockedCount, Converter={StaticResource CountToVisibilityConverter}}"/>
+                            
+                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Failed" Foreground="#F44336" Margin="0,0,0,16" Visibility="{Binding ResultFailedCount, Converter={StaticResource CountToVisibilityConverter}}"/>
+                            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ResultFailedCount}" Foreground="#F44336" FontWeight="Bold" Margin="0,0,0,16" Visibility="{Binding ResultFailedCount, Converter={StaticResource CountToVisibilityConverter}}"/>
+                            
+                            <!-- Divider -->
+                            <Rectangle Grid.Row="6" Grid.ColumnSpan="2" Height="1" Fill="#1C202B" Margin="-24,0,-24,16"/>
+                            
+
+                            <!-- Primary Reason Error message (if any failures) -->
+                            <TextBlock Grid.Row="9" Grid.ColumnSpan="2" 
+                                       Text="{Binding ResultPrimaryReason}" 
+                                       Foreground="#FF5252" FontSize="11" TextWrapping="Wrap"
+                                       Visibility="{Binding ResultFailedCount, Converter={StaticResource CountToVisibilityConverter}}"/>
+                            </Grid>
+                        </Border>
+                        
+                        <!-- Footer -->
+                        <Border Background="#1C202B" Padding="0,12">
+                            <TextBlock Text="{Binding ResultType, Converter={StaticResource StatusToFooterConverter}}" 
+                                       HorizontalAlignment="Center" 
+                                       Foreground="#505565" 
+                                       FontSize="10" 
+                                       FontWeight="Bold" />
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </Border>
+
+            <!-- Resize grip -->
+            <ResizeGrip HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                        WindowChrome.ResizeGripDirection="BottomRight" Opacity="0.3"/>
+        </Grid>
+    </Border>
+</Window>
+
+
+

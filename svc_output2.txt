@@ -1,0 +1,18 @@
+info: BiosOptimizer.Service.NamedPipeServer[0]
+      PIPE_INIT_STARTED
+info: BiosOptimizer.Service.NamedPipeServer[0]
+      IPC_STARTING (Self-test on 'BiosOptimizer_IPC_v2_selftest')
+info: BiosOptimizer.Service.NamedPipeServer[0]
+      IPC_SELF_TEST_PASSED
+info: BiosOptimizer.Service.NamedPipeServer[0]
+      IPC_READY
+info: BiosOptimizer.Service.NamedPipeServer[0]
+      PIPE_LISTENING on 'BiosOptimizer_IPC_v2'
+info: BiosOptimizer.Service.NamedPipeServer[0]
+      PIPE_CREATED
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\PROJECTS FOR EXE\ON PROCESS\ERROR OPTIMIZER\dist\win-x64\service

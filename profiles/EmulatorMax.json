@@ -1,0 +1,64 @@
+{
+  "id": "EmulatorMax",
+  "displayName": "Emulator Max",
+  "description": "Virtualization-aware maximum optimization for emulator workloads (BlueStacks, MSI App Player, etc.). Protects required Hyper-V and virtualization components. Only runs when emulator is detected.",
+  "extends": ["Pro"],
+  "targetProcessReduction": {
+    "min": 50,
+    "max": 90
+  },
+  "entries": [
+    {
+      "id": "emu.powerplan",
+      "displayName": "Ultimate Performance Power Plan",
+      "category": "Performance",
+      "action": "SetPowerPlan",
+      "target": "e9a42b02-d5df-448d-aa00-03f14749eb61",
+      "value": "e9a42b02-d5df-448d-aa00-03f14749eb61",
+      "os": ["win10", "win11"],
+      "risk": "Medium",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [
+        { "type": "IsOnAc", "operator": "Equals", "value": true },
+        { "type": "WorkloadInstalled", "operator": "Equals", "value": "BlueStacks" }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "emu.foreground",
+      "displayName": "Emulator Balanced CPU Priority",
+      "category": "Performance",
+      "action": "SetForegroundPriority",
+      "target": "Win32PrioritySeparation",
+      "value": 26,
+      "os": ["win10", "win11"],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "Balanced foreground/background ratio for virtualized emulator.",
+      "conditions": [
+        { "type": "WorkloadInstalled", "operator": "Equals", "value": "BlueStacks" }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    },
+    {
+      "id": "emu.pagefile",
+      "displayName": "System-Managed Pagefile for Emulator",
+      "category": "Memory",
+      "action": "SetPagefile",
+      "target": "Auto",
+      "value": "Auto",
+      "os": ["win10", "win11"],
+      "risk": "High",
+      "requiresConfirmation": true,
+      "warning": "BlueStacks may consume significant virtual memory. System-managed pagefile is safer.",
+      "conditions": [
+        { "type": "WorkloadInstalled", "operator": "Equals", "value": "BlueStacks" }
+      ],
+      "verification": "ReadBack",
+      "rollback": "Snapshot"
+    }
+  ]
+}

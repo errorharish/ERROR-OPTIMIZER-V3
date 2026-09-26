@@ -1,0 +1,35 @@
+{
+  "id": "TopazAI",
+  "displayName": "Topaz AI",
+  "description": "GPU optimization and VRAM headroom configuration for Topaz Video AI & Gigapixel.",
+  "targetProcessReduction": { "min": 20, "max": 40 },
+  "extends": [ "Pro" ],
+  "entries": [
+    {
+      "id": "topaz_priority",
+      "displayName": "Set Topaz Video AI Priority to High",
+      "category": "Workload",
+      "action": "SetProcessPriority",
+      "target": "Topaz Video AI",
+      "value": "High",
+      "risk": "Medium"
+    },
+    {
+      "id": "topaz_power",
+      "displayName": "Set Ultimate Performance Power Plan",
+      "category": "Performance",
+      "action": "SetPowerPlan",
+      "target": "e9a42b02-d5df-448d-aa00-03f14749eb61",
+      "risk": "Medium"
+    },
+    {
+      "id": "topaz_hags",
+      "displayName": "Enable HAGS (Hardware Accelerated GPU Scheduling)",
+      "category": "Performance",
+      "action": "SetHags",
+      "target": "HwSchMode",
+      "value": 2,
+      "risk": "Medium"
+    }
+  ]
+}

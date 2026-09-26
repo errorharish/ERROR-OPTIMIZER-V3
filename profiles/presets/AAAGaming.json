@@ -1,0 +1,35 @@
+{
+  "id": "AAAGaming",
+  "displayName": "AAA Gaming",
+  "description": "Maximum FPS, latency reduction, and resource availability for AAA PC games.",
+  "targetProcessReduction": { "min": 20, "max": 40 },
+  "extends": [ "Ultimate" ],
+  "entries": [
+    {
+      "id": "gaming_power",
+      "displayName": "Set Ultimate Performance Power Plan",
+      "category": "Performance",
+      "action": "SetPowerPlan",
+      "target": "e9a42b02-d5df-448d-aa00-03f14749eb61",
+      "risk": "Medium"
+    },
+    {
+      "id": "gaming_hags",
+      "displayName": "Enable HAGS (Hardware Accelerated GPU Scheduling)",
+      "category": "Performance",
+      "action": "SetHags",
+      "target": "HwSchMode",
+      "value": 2,
+      "risk": "Medium"
+    },
+    {
+      "id": "gaming_foreground",
+      "displayName": "Set Foreground Application Priority",
+      "category": "Performance",
+      "action": "SetForegroundPriority",
+      "target": "Win32PrioritySeparation",
+      "value": 38,
+      "risk": "Medium"
+    }
+  ]
+}

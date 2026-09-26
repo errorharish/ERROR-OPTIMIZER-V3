@@ -1,0 +1,84 @@
+<UserControl x:Class="BiosOptimizer.GUI.Views.BackupRestoreView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent" UseLayoutRounding="True" SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Style="{StaticResource SlimScrollViewer}">
+        <Grid Margin="28,24,24,24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Backup &amp; Restore" Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock Text="Manage system snapshots and restore points." 
+                               Style="{StaticResource PageSubtitleStyle}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Style="{StaticResource SecondaryButtonStyle}"
+                            Content="↻ Refresh" Command="{Binding LoadBackupsCommand}" Margin="0,0,8,0"/>
+                    <Button Style="{StaticResource DangerButtonStyle}" Margin="0,0,8,0"
+                            Content="↺  Restore Last Profile" Command="{Binding RestoreCommand}"/>
+                    <Button Style="{StaticResource DangerButtonStyle}"
+                            Content="⚠ Restore Entire System" Command="{Binding RestoreAllCommand}" 
+                            ToolTip="Restores ALL pre-execution registry keys and service states."/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Status bar -->
+            <Border Grid.Row="2" Style="{StaticResource GlassCardStyle}" Padding="16,12">
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="8" Height="8" CornerRadius="4"
+                            Background="{StaticResource StatusGreenBrush}"
+                            VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="{Binding Status}"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Snapshot List -->
+            <Border Grid.Row="4" Style="{StaticResource GlassCardStyle}" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Available Snapshots" Style="{StaticResource CardTitleStyle}"
+                               Margin="0,0,0,12"/>
+                    <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto"
+                                  Style="{StaticResource SlimScrollViewer}">
+                        <TextBlock Text="{Binding Backups}"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   FontSize="11" FontFamily="Cascadia Mono, Consolas"
+                                   TextWrapping="Wrap" LineHeight="18"/>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+
+            <!-- Result Panel -->
+            <Border Grid.Row="6" Style="{StaticResource GlassCardStyle}" Padding="20"
+                    Visibility="{Binding HasResult}">
+                <StackPanel>
+                    <TextBlock Text="Restore Result" Style="{StaticResource CardTitleStyle}"
+                               Margin="0,0,0,12"/>
+                    <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto"
+                                  Style="{StaticResource SlimScrollViewer}">
+                        <TextBlock Text="{Binding Result}"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="11" FontFamily="Cascadia Mono, Consolas"
+                                   TextWrapping="Wrap" LineHeight="18"/>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
+

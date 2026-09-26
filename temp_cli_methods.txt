@@ -1,0 +1,22 @@
+﻿    private static async Task RunInputScan(IInputOptimizerEngine engine)
+    {
+        var plan = await engine.PlanInputOptimizationAsync();
+        Console.WriteLine(""INPUT OPTIMIZATION PLAN:"");
+        foreach (var action in plan.Actions)
+        {
+            Console.WriteLine($""[{action.Risk}] {action.Name} - Current: {action.CurrentValue} Target: {action.TargetValue} Status: {action.Reason}"");
+        }
+    }
+
+    private static async Task RunInputApply(IInputOptimizerEngine engine, string risk)
+    {
+        var result = await engine.ApplyInputOptimizationAsync(risk);
+        Console.WriteLine($""Apply {risk} result: {(result.Success ? ""SUCCESS"" : ""FAILED"")} - {result.Message}"");
+    }
+
+    private static async Task RunInputRestore(IInputOptimizerEngine engine)
+    {
+        var result = await engine.RestoreInputOptimizationAsync();
+        Console.WriteLine($""Restore result: {(result.Success ? ""SUCCESS"" : ""FAILED"")} - {result.Message}"");
+    }
+}

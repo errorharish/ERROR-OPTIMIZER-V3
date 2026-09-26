@@ -1,0 +1,26 @@
+{
+  "id": "LowEndRescue",
+  "displayName": "Low-End Rescue",
+  "description": "Adaptive optimization for low-end hardware focusing on memory conservation and background task reduction.",
+  "targetProcessReduction": { "min": 25, "max": 45 },
+  "extends": [ "Normal", "Debloat" ],
+  "entries": [
+    {
+      "id": "low_end_pagefile",
+      "displayName": "Ensure Pagefile Availability",
+      "category": "Memory",
+      "action": "SetPagefile",
+      "target": "Auto",
+      "risk": "Low"
+    },
+    {
+      "id": "low_end_visuals",
+      "displayName": "Reduce Visual Effects",
+      "category": "Performance",
+      "action": "SetRegistryValue",
+      "target": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects\\VisualFXSetting",
+      "value": "2",
+      "risk": "Low"
+    }
+  ]
+}

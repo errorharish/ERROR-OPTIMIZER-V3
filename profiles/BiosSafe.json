@@ -1,0 +1,92 @@
+{
+  "id": "BiosSafe",
+  "displayName": "BIOS Safe",
+  "description": "Universal hardware-aware and firmware-aware optimization engine for Windows and UEFI platforms.",
+  "extends": [],
+  "targetProcessReduction": {
+    "min": 2,
+    "max": 8
+  },
+  "entries": [
+    {
+      "id": "biossafe.power.ultimate",
+      "displayName": "Activate High Performance Hardware Power Plan",
+      "category": "Power",
+      "action": "SetPowerPlan",
+      "target": "High Performance",
+      "value": "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c",
+      "os": [],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Configures unthrottled CPU states and prevents AC power throttling for minimum system latency."
+    },
+    {
+      "id": "biossafe.pcie.linkstate",
+      "displayName": "PCIe Link State Power Management (High Performance)",
+      "category": "Power",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\501a4d13-42af-4429-9e56-4784e8e0e650\\ee12f906-d277-404b-b6da-e5fa1a576df5\\Attributes",
+      "value": 2,
+      "os": [],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Unlocks full PCIe bandwidth for discrete GPU and NVMe SSDs by preventing link power-down transitions."
+    },
+    {
+      "id": "biossafe.mmcss.gpu",
+      "displayName": "MMCSS High-Priority GPU & Audio Scheduling",
+      "category": "GPU",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games\\GPU Priority",
+      "value": 8,
+      "os": [],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Elevates GPU priority for real-time 3D rendering and multimedia audio pipelines."
+    },
+    {
+      "id": "biossafe.power.throttling",
+      "displayName": "Disable Background Power Throttling for NVMe & Hardware Tasks",
+      "category": "CPU",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling\\PowerThrottlingOff",
+      "value": 1,
+      "os": [],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Prevents Windows scheduler from downclocking background I/O operations and disk transfers."
+    },
+    {
+      "id": "biossafe.timer.resolution",
+      "displayName": "Optimize Platform Timer & Global Resolution",
+      "category": "CPU",
+      "action": "SetRegistryValue",
+      "target": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\kernel\\GlobalTimerResolutionRequests",
+      "value": 1,
+      "os": [],
+      "risk": "Low",
+      "requiresConfirmation": false,
+      "warning": "",
+      "conditions": [],
+      "verification": "ReadBack",
+      "rollback": "Snapshot",
+      "description": "Enables global high-resolution timer requests for consistent microsecond frame timing."
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+<UserControl x:Class="BiosOptimizer.GUI.Views.ProcessReductionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent" UseLayoutRounding="True" SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Style="{StaticResource SlimScrollViewer}">
+        <Grid Margin="28,24,24,24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Process Reduction Engine" Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock Text="Safely identify and terminate non-essential background processes." 
+                               Style="{StaticResource PageSubtitleStyle}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Style="{StaticResource SecondaryButtonStyle}"
+                            Content="↻ Rescan" Command="{Binding ScanCommand}" Margin="0,0,8,0" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"/>
+                    <Button Style="{StaticResource DangerButtonStyle}"
+                            Content="Terminate Selected" Command="{Binding TerminateCommand}"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Status bar -->
+            <Border Grid.Row="2" Style="{StaticResource GlassCardStyle}" Padding="16,12">
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="8" Height="8" CornerRadius="4"
+                            Background="{StaticResource StatusBlueBrush}"
+                            VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="{Binding StatusText}"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="12" VerticalAlignment="Center"/>
+                    <ProgressBar IsIndeterminate="True" Width="100" Height="4" Margin="20,0,0,0"
+                                 Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Process List -->
+            <Border Grid.Row="4" Style="{StaticResource GlassCardStyle}" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="Safe To Terminate Candidates" Style="{StaticResource CardTitleStyle}" Margin="0,0,0,12"/>
+                    
+                    <ListView Grid.Row="1" ItemsSource="{Binding SafeToKillProcesses}" Background="Transparent" BorderThickness="0" MaxHeight="400">
+                        <ListView.View>
+                            <GridView ColumnHeaderContainerStyle="{StaticResource FlatGridViewColumnHeader}">
+                                <GridViewColumn Width="40">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="PID" DisplayMemberBinding="{Binding ProcessId}" Width="60"/>
+                                <GridViewColumn Header="Process Name" DisplayMemberBinding="{Binding ProcessName}" Width="150"/>
+                                <GridViewColumn Header="CPU %" DisplayMemberBinding="{Binding CpuUsagePercent, StringFormat={}{0:F2}%}" Width="80"/>
+                                <GridViewColumn Header="Executable Path" DisplayMemberBinding="{Binding ProcessPath}" Width="350"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </Border>
+
+            <!-- Result Panel -->
+            <Border Grid.Row="6" Style="{StaticResource GlassCardStyle}" Padding="20"
+                    Visibility="{Binding ResultText, Converter={StaticResource NullToCollapsedConverter}}">
+                <StackPanel>
+                    <TextBlock Text="Result" Style="{StaticResource CardTitleStyle}" Margin="0,0,0,8"/>
+                    <TextBlock Text="{Binding ResultText}"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               FontSize="12" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,792 @@
+{
+    "id":  "Ultimate",
+    "displayName":  "Ultimate Optimization",
+    "description":  "Deep system optimization for workstations and power users. Extends Pro with additional services, Windows features, scheduled tasks, visual effects, and advanced registry targets. System Restore point created before execution.",
+    "extends":  [
+                    "Pro"
+                ],
+    "targetProcessReduction":  {
+                                   "min":  80,
+                                   "max":  130
+                               },
+    "entries":  [
+                    {
+                        "id":  "ultimate.service.wuauserv",
+                        "displayName":  "Windows Update — Manual (not Disabled)",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "wuauserv",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "High",
+                        "requiresConfirmation":  true,
+                        "warning":  "Windows Update will still function, but won\u0027t run automatically. You must check for updates manually in Settings.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.bits",
+                        "displayName":  "Background Intelligent Transfer Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "BITS",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "High",
+                        "requiresConfirmation":  true,
+                        "warning":  "May impact background downloads for Windows Update and Store apps.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.dosvc",
+                        "displayName":  "Delivery Optimization",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "DoSvc",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables P2P update distribution.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.cdpsvc",
+                        "displayName":  "Connected Devices Platform Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "CDPSvc",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "High",
+                        "requiresConfirmation":  true,
+                        "warning":  "May affect Phone Link, cross-device experiences, and Bluetooth pairing.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.diagsvc",
+                        "displayName":  "Diagnostics Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "DiagSvc",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Reduces background diagnostic data collection.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.pcasvc",
+                        "displayName":  "Program Compatibility Assistant",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "PcaSvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables program compatibility monitoring.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.dps",
+                        "displayName":  "Diagnostic Policy Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "dps",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables automatic Windows problem diagnosis.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.entappsvc",
+                        "displayName":  "Enterprise App Management Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "EntAppSvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Enterprise app management. Safe for consumer PCs.",
+                        "conditions":  [
+                                           {
+                                               "type":  "IsDomainJoined",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.winhttpautoproxy",
+                        "displayName":  "WinHTTP Web Proxy Auto-Discovery",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "WinHttpAutoProxySvc",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Reduces proxy auto-discovery background activity.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.smsrouter",
+                        "displayName":  "Microsoft Windows SMS Router Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "SmsRouter",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.ncasvc",
+                        "displayName":  "Network Connectivity Assistant",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "NcaSvc",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Safe for non-DirectAccess non-domain machines.",
+                        "conditions":  [
+                                           {
+                                               "type":  "IsDomainJoined",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.storagesvc",
+                        "displayName":  "Storage Service",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "StorSvc",
+                        "value":  "Manual",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Manages storage device settings.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.vacSvc",
+                        "displayName":  "Volumetric Audio Compositor",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "VacSvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables 3D Spatial Sound compositing. Rarely used.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.ssstpsvc",
+                        "displayName":  "SSTP VPN Client",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "SstpSvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables SSTP VPN. Safe for non-VPN users.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.graphicsperf",
+                        "displayName":  "Graphics Performance Monitor",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "GraphicsPerfSvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Background graphics performance logging.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.service.hkmsvc",
+                        "displayName":  "Health Key and Certificate Management",
+                        "category":  "Service",
+                        "action":  "SetServiceStartup",
+                        "target":  "Hkmsvc",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Health certificate service for NAP. Unused on home systems.",
+                        "conditions":  [
+                                           {
+                                               "type":  "IsDomainJoined",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.startup.cortana",
+                        "displayName":  "Cortana Background Task",
+                        "category":  "Startup",
+                        "action":  "DisableStartupEntry",
+                        "target":  "Cortana",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables Cortana on Windows 10.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.startup.widgets",
+                        "displayName":  "Windows 11 Widgets Background Task",
+                        "category":  "Startup",
+                        "action":  "DisableStartupEntry",
+                        "target":  "Widgets",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Removes Widgets from the taskbar startup on Windows 11.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.registry.hibernation",
+                        "displayName":  "Disable Hibernation (Desktop/AC only)",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\HibernateEnabled",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "High",
+                        "requiresConfirmation":  true,
+                        "warning":  "Disables hibernation and Fast Startup. Frees disk equal to RAM size. Do not apply on laptops.",
+                        "conditions":  [
+                                           {
+                                               "type":  "HasBattery",
+                                               "operator":  "Equals",
+                                               "value":  false
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.registry.animations",
+                        "displayName":  "Disable UI Animations",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\Control Panel\\Desktop\\WindowMetrics\\MinAnimate",
+                        "value":  "0",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Disables window minimize/maximize animations.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.registry.taskbaranimations",
+                        "displayName":  "Disable Taskbar Animations",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarAnimations",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.registry.listviewshadow",
+                        "displayName":  "Disable ListView Item Shadows",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\ListviewShadow",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.registry.listalpha",
+                        "displayName":  "Disable ListView Alpha Selection",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\ListviewAlphaSelect",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.registry.nodraginimages",
+                        "displayName":  "Disable Full Window Drag",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\Control Panel\\Desktop\\DragFullWindows",
+                        "value":  "0",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Shows only window outline while dragging.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.registry.ballontips",
+                        "displayName":  "Disable Balloon Tips",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\EnableBalloonTips",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.registry.clearpage",
+                        "displayName":  "Do Not Clear Page File on Shutdown",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\\ClearPageFileAtShutdown",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Medium",
+                        "requiresConfirmation":  false,
+                        "warning":  "Keeps pagefile data between reboots. Minor security consideration on shared machines.",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.registry.syncprovnotify",
+                        "displayName":  "Disable Sync Provider Notifications",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "target":  "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\ShowSyncProviderNotifications",
+                        "value":  0,
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.task.wdi1",
+                        "displayName":  "Windows Diagnostic Infrastructure Task",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\WDI\\ResolutionHost",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.task.autochk",
+                        "displayName":  "Proxy Task for Programs",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Autochk\\Proxy",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.task.flighting",
+                        "displayName":  "Windows Insider Flighting Task",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Flighting\\FeatureConfig\\ReconcileFeatures",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.task.onedrive.update",
+                        "displayName":  "OneDrive Update Task",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\OneDrive Standalone Update Task-S-1-5-21",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "Prevents OneDrive from auto-updating.",
+                        "conditions":  [
+                                           {
+                                               "type":  "WorkloadInstalled",
+                                               "operator":  "Equals",
+                                               "value":  "OneDrive"
+                                           }
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "id":  "ultimate.task.devinfo",
+                        "displayName":  "Device Information Diagnostics",
+                        "category":  "ScheduledTask",
+                        "action":  "DisableScheduledTask",
+                        "target":  "\\Microsoft\\Windows\\Device Information\\Device",
+                        "value":  "Disabled",
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "risk":  "Low",
+                        "requiresConfirmation":  false,
+                        "warning":  "",
+                        "conditions":  [
+
+                                       ],
+                        "verification":  "ReadBack",
+                        "rollback":  "Snapshot"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "ult.reg.win32priority",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Win32 Priority Separation",
+                        "risk":  "High",
+                        "warning":  "",
+                        "target":  "HKLM\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl\\Win32PrioritySeparation",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  38
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "ult.reg.mousetrails",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Disable Mouse Trails",
+                        "risk":  "Medium",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Mouse\\MouseTrails",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "0"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "ult.reg.doubleclickspeed",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Fast Double Click Speed",
+                        "risk":  "Medium",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Mouse\\DoubleClickSpeed",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "200"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "ult.reg.beep",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Disable System Beep",
+                        "risk":  "Medium",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Mouse\\Beep",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "No"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "ult.reg.extendedsounds",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Disable Extended Sounds",
+                        "risk":  "Medium",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Mouse\\ExtendedSounds",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  "No"
+                    },
+                    {
+                        "verification":  "ReadBack",
+                        "id":  "ult.reg.activewindowtracking",
+                        "category":  "Registry",
+                        "action":  "SetRegistryValue",
+                        "rollback":  "Snapshot",
+                        "requiresConfirmation":  false,
+                        "displayName":  "Enable Active Window Tracking",
+                        "risk":  "Medium",
+                        "warning":  "",
+                        "target":  "HKCU\\Control Panel\\Mouse\\ActiveWindowTracking",
+                        "conditions":  [
+
+                                       ],
+                        "os":  [
+                                   "win10",
+                                   "win11"
+                               ],
+                        "value":  1
+                    }
+                ]
+}
