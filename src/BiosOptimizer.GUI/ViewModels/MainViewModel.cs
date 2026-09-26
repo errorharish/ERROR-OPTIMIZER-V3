@@ -391,6 +391,8 @@ namespace BiosOptimizer.GUI.ViewModels
 
                 ["MaxPerformance"] = () => new TierViewModel(ipc, "MaximumPerformance", "Maximum Performance", "Extreme optimizations for gaming and rendering."),
 
+                ["V4"] = () => new V4ViewModel(),
+
                 ["AiOptimization"] = () => new AiOptimizationViewModel(ipc),
 
                 ["SystemInfo"]     = () => new SystemInfoViewModel(ipc),
