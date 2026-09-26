@@ -60,6 +60,12 @@
 
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:V4ViewModel}">
+
+                <views:V4View/>
+
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type vm:AiOptimizationViewModel}">
 
                 <views:AiOptimizationView/>
